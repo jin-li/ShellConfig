@@ -2,6 +2,9 @@
 
 Configurations for Linux/macOS/WSL shell and *vim*
 
+![WSL](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black) ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white) 
+![zsh](https://img.shields.io/badge/shell-oh--my--zsh-green) ![vi](https://img.shields.io/badge/vim-vim--airline-blue) ![license](https://img.shields.io/badge/license-BSD--2--Clause-brightgreen)
+
 ## Shell Configuration
 
 ![Shell Appearence](./figs/shell_appearence.JPG)
