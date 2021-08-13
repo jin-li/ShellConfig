@@ -115,6 +115,9 @@ alias cp='cp -v'
 alias mv='mv -v'
 alias rm='rm -v'
 
+# change the color of zsh-autosuggestion
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=69'
+
 # powerlevel10k config by lijin @2018.1.21
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs newline history)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs command_execution_time time)
