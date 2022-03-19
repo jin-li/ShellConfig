@@ -1,13 +1,10 @@
 # Shell Configuration
 
-Configurations for Linux/macOS/WSL shell and *vim*
+Configurations for Linux shell and *vim*
 
-![WSL](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black) ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white) 
-![zsh](https://img.shields.io/badge/shell-oh--my--zsh-green) ![vi](https://img.shields.io/badge/vim-vim--airline-blue) ![license](https://img.shields.io/badge/license-BSD--2--Clause-brightgreen)
+## Linux Shell Configuration
 
-## Shell Configuration
-
-![Shell Appearence](./figs/shell_appearence.JPG)
+![Shell Appearence](./shell_appearence.JPG)
 
 ### Features
 
@@ -30,6 +27,11 @@ Configurations for Linux/macOS/WSL shell and *vim*
     applications on your system.
 
     For setting up the font in the preference of the terminals, please refer to [p10k Font](https://github.com/romkatv/powerlevel10k#Fonts).
+
+1. Update `apt` sources
+    ```bash
+    sudo apt update
+    ```
 
 2. Install prerequisite tools (*git*, *wget*, *python3*, *pip3*)
    
@@ -63,15 +65,15 @@ Configurations for Linux/macOS/WSL shell and *vim*
 
 1. Install plugins and tools
    
-    - [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
+    - zsh-autosuggestions
         ```
         git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
         ```
-    - [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
+    - zsh-syntax-highlighting
         ```
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
         ```
-    - [thefuck](https://github.com/nvbn/thefuck)
+    - thefuck
         ```
         sudo pip3 install thefuck
         ```
@@ -91,16 +93,16 @@ Configurations for Linux/macOS/WSL shell and *vim*
         ```
     3. Link configuration files to *home* directory
         ```
-        ln ~/Documents/GitHub/ShellConfig/.bashrc ~/.bashrc
-        ln ~/Documents/GitHub/ShellConfig/.zshrc ~/.zshrc
-        ln ~/Documents/GitHub/ShellConfig/.p10k.zsh ~/.p10k.zsh
+        ln ~/Documents/GitHub/ShellConfig/surface_debian/.bashrc ~/.bashrc
+        ln ~/Documents/GitHub/ShellConfig/surface_debian/.zshrc ~/.zshrc
+        ln ~/Documents/GitHub/ShellConfig/surface_debian/.p10k.zsh ~/.p10k.zsh
         ```
 
-2. Restart terminal
+1. Restart terminal
 
 ## Vim Configuration
 
-![Vim Appearance](./figs/vim_appearence.JPG)
+![Vim Appearance](./vim_appearence.JPG)
 
 ### Features
 
@@ -133,7 +135,7 @@ sudo apt install vim
 
 2. Link configuration file to *home* directory
     ```
-    ln ~/Documents/GitHub/ShellConfig/.vimrc ~/.vimrc
+    ln ~/Documents/GitHub/ShellConfig/surface_debian/.vimrc ~/.vimrc
     ```
 
 3. Install plugins in Vim, type following command in Vim
