@@ -4,7 +4,7 @@ Configurations for Linux shell and *vim*
 
 ## Linux Shell Configuration
 
-![Shell Appearence](./shell_appearence.JPG)
+![Shell Appearence](figs/shell_appearence.JPG)
 
 ### Features
 
@@ -102,7 +102,7 @@ Configurations for Linux shell and *vim*
 
 ## Vim Configuration
 
-![Vim Appearance](./vim_appearence.JPG)
+![Vim Appearance](figs/vim_appearence.JPG)
 
 ### Features
 
