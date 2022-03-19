@@ -33,13 +33,13 @@ Configurations for Linux shell and *vim*
     sudo apt update
     ```
 
-2. Install prerequisite tools (*git*, *wget*, *python3*, *pip3*)
+1. Install prerequisite tools (*git*, *wget*, *python3*, *pip3*)
    
     ```
     sudo apt install wget git python3-dev python3-pip python3-setuptools
     ```
 
-3. [Install zsh](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
+1. [Install zsh](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
     
     - Ubuntu, Debian & derivatives
         ```
@@ -51,13 +51,13 @@ Configurations for Linux shell and *vim*
         sudo pacman -S zsh
         ```
 
-4. Install [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) via *wget*
+1. Install [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) via *wget*
     
     ```
     sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     ```
 
-5. Install [powerlevel10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
+1. Install [powerlevel10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
    
     ```
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
