@@ -93,9 +93,9 @@ Configurations for Linux shell and *vim*
         ```
     3. Link configuration files to *home* directory
         ```
-        ln ~/Documents/GitHub/ShellConfig/surface_debian/.bashrc ~/.bashrc
-        ln ~/Documents/GitHub/ShellConfig/surface_debian/.zshrc ~/.zshrc
-        ln ~/Documents/GitHub/ShellConfig/surface_debian/.p10k.zsh ~/.p10k.zsh
+        ln ~/Documents/GitHub/ShellConfig/.bashrc ~/.bashrc
+        ln ~/Documents/GitHub/ShellConfig/.zshrc ~/.zshrc
+        ln ~/Documents/GitHub/ShellConfig/.p10k.zsh ~/.p10k.zsh
         ```
 
 1. Restart terminal
