@@ -135,7 +135,7 @@ sudo apt install vim
 
 2. Link configuration file to *home* directory
     ```
-    ln ~/Documents/GitHub/ShellConfig/surface_debian/.vimrc ~/.vimrc
+    ln ~/Documents/GitHub/ShellConfig/.vimrc ~/.vimrc
     ```
 
 3. Install plugins in Vim, type following command in Vim
