@@ -1,3 +1,5 @@
+Language : 🇺🇸 | [🇨🇳](./README.zh-cn.md)
+
 # Shell Configuration
 
 Configurations for Linux shell and *vim*
