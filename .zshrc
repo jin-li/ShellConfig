@@ -135,8 +135,6 @@ export LS_COLORS='rs=0:di=34;1;47:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=4
 source $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# Added for thefuck by lijin @ 2018.10.22
-eval $(thefuck --alias)
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

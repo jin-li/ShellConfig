@@ -74,10 +74,6 @@
         ```
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
         ```
-    - 命令修正建议thefuck
-        ```
-        sudo pip3 install thefuck
-        ```
 
 1. 下载配置文件，并链接到用户根目录下
     
