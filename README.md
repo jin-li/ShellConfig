@@ -30,27 +30,33 @@ Configurations for Linux shell and *vim*
 
     For setting up the font in the preference of the terminals, please refer to [p10k Font](https://github.com/romkatv/powerlevel10k#Fonts).
 
-1. Update `apt` sources
-    ```bash
-    sudo apt update
-    ```
-
-1. Install prerequisite tools (*git*, *wget*, *python3*, *pip3*)
-   
-    ```
-    sudo apt install wget git python3-dev python3-pip python3-setuptools
-    ```
-
 1. [Install zsh](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
     
     - Ubuntu, Debian & derivatives
-        ```
-        sudo apt install zsh
-        ```
+        1. Update `apt` sources
+            ```bash
+            sudo apt update
+            ```
+
+        1. Install prerequisite tools (*git*, *wget*, *python3*, *pip3*)
+        
+            ```
+            sudo apt install wget git python3-dev python3-pip python3-setuptools
+            ```
+    
+        1. Install *zsh*
+            ```
+            sudo apt install zsh
+            ```
 
     - Arch Linux or Manjaro
         ```
         sudo pacman -S zsh
+        ```
+    
+    - Fedora
+        ```
+        sudo dnf install zsh
         ```
 
 1. Install [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) via *wget*
