@@ -108,44 +108,77 @@ Configurations for Linux shell and *vim*
 
 ![Vim Appearance](figs/vim_appearence.JPG)
 
-### Features
+### Motivation
 
-- Plugin management: Vundle
-- Theme: vim-airline
-- Plugins: [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe), [vim-airline](https://github.com/vim-airline/vim-airline), [vimtex](https://github.com/lervag/vimtex)
+I migrated from *vim* to *neovim* because of the better performance and more features. 
 
-### Prerequisite
+[*LazyVim*](https://www.lazyvim.org/) is a starter-friendly configuration for *neovim* with the commonly used plugins. It is easy to install and use.
 
-The default *vim* in Debian OS is *vim-tiny*, which does not support the plugins. Use following command to check your *vim* version first before using this configuration.
+### Install
+
+#### Remove *vim-tiny* or *vim-minimal*
+
+The default *vim* in Debian OS is *vim-tiny* (in Fedora is *vim-minimal*), which does not support the plugins. Use following command to check your *vim* version first before using this configuration.
 
 ```
 vi --version
 ```
 
-If there is "Small version without GUI" in the output, it means your *vim* is *vim-tiny*. You can remove it and install the full version *vim* using following command:
+If there is "Small version without GUI" in the output, it means your *vim* is *vim-tiny* or *vim-minimal*. You can remove it:
 
-```
-sudo apt remove vim-tiny
-sudo apt install vim
-```
-
-### Configuration
-
-1. Install [Vundle](https://github.com/VundleVim/Vundle.vim)
-
+- Debian / Ubuntu
     ```
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    sudo apt remove vim-tiny
+    ```
+- Fedora
+    ```
+    sudo dnf remove vim-minimal
     ```
 
-2. Link configuration file to *home* directory
+#### Install *neovim*
+
+Then install [*neovim*](https://neovim.io/).
+
+- Debian / Ubuntu
+  
+  Since *LazyVim* requires *neovim* 0.8 or later, in Ubuntu 22.04, the neovim version is 0.6.1. Therefore, We need to install the newer version of *neovim* from the official website.
+
+    1. Download the pre-built binaries of *neovim* from the [official website](https://github.com/neovim/neovim/releases)
+        ```
+        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+        ```
+    2. Extract the downloaded file
+        ```
+        sudo tar -C /opt -xzf nvim-linux64.tar.gz
+        ```
+        This will install *neovim* to */opt/nvim-linux64* directory.
+    3. Create a symbolic link to the *neovim* executable
+        ```
+        sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
+        ```
+
+- Fedora
+  
+  In Fedora 40, the *neovim* version is 0.9.5, which is new enough to use *LazyVim*. So we can install it using *dnf* directly.
     ```
-    ln ~/Documents/GitHub/ShellConfig/.vimrc ~/.vimrc
+    sudo dnf install neovim
     ```
 
-3. Install plugins in Vim, type following command in Vim
-    ```
-    :PluginInstall
-    ```
-    Plugins will be installed automatically, wait until the install completed.
+### Install *LazyVim*
 
-1. Other plugins can be installed easily via *Vundle*
+Refer to the [official website](https://www.lazyvim.org/installation), we can install *LazyVim* using the following command:
+
+1. Install *LazyVim*
+    ```
+    git clone https://github.com/LazyVim/starter ~/.config/nvim
+    ```
+
+2. Remove the `.git` folder, so you can add it to your own repo later
+    ```
+    rm -rf ~/.config/nvim/.git
+    ```
+
+3. First time run *nvim* will install the plugins automatically. It may take a while to finish.
+    ```
+    nvim
+    ```
