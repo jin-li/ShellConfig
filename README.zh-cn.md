@@ -4,15 +4,30 @@
 
 效果展示:
 
-![Shell Appearence](./figs/shell_appearence.JPG)
+![Shell Appearence](https://img.jinli.io/images/2024/05/19/shell_appearence.md.jpg)
 
 ### 特点
 
-- Shell: oh-my-zsh
-- 主题: powerlevel10k
+- Shell: [oh-my-zsh](https://ohmyz.sh/)
+- 主题: [powerlevel10k](https://github.com/romkatv/powerlevel10k)
 - 插件: 命令自动补全建议[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions), 命令语法高亮[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting), 命令修正建议[thefuck](https://github.com/nvbn/thefuck)
 
 ### 安装
+
+#### 方法一：使用脚本自动安装（推荐）
+
+1. 下载安装脚本：
+    ```sh
+    curl -s https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_OhMyZsh_p10k.sh -o install_OhMyZsh_p10k.sh
+    ```
+
+1. 运行脚本：
+    ```
+    chmod +x install_OhMyZsh_p10k.sh
+    ./install_OhMyZsh_p10k.sh
+    ```
+
+#### 方法二：手动安装
 
 1. 安装 Meslo Nerd 字体
    
@@ -91,12 +106,12 @@
         cd ~/Documents/GitHub
         git clone https://github.com/jin-li/ShellConfig.git 
         ```
-    2. 备份旧配置文件
+    1. 备份旧配置文件
         ```
         mv ~/.bashrc ~/.bashrc_bak
         mv ~/.zshrc ~/.zshrc_bak
         ```
-    3.将配置文件链接到 *home* 目录
+    1. 将配置文件链接到 *home* 目录
         ```
         ln ~/Documents/GitHub/ShellConfig/.bashrc ~/.bashrc
         ln ~/Documents/GitHub/ShellConfig/.zshrc ~/.zshrc
@@ -107,7 +122,7 @@
 
 ## 配置Vim
 
-![Vim Appearance](./figs/vim_appearence.JPG)
+![Vim Appearance](https://img.jinli.io/images/2024/05/24/lazyvim.md.png)
 
 ### 动机
 
@@ -115,67 +130,95 @@
 
 ### 安装
 
-#### 卸载 *vim-tiny* 或 *vim-minimal*
+#### 方法一：使用脚本自动安装（推荐）
 
-Debian系统默认的vim是*vim-tiny*，Fedora系统默认的vim是*vim-minimal*，这两个版本都不支持插件。在使用本配置之前，需要先检查你的vim版本。
-
-```
-vi --version
-```
-
-如果输出中有"Small version without GUI"，说明你的vim是*vim-tiny*或*vim-minimal*。你可以卸载它：
-
-- Debian / Ubuntu
-    ```
-    sudo apt remove vim-tiny
-    ```
-- Fedora
-    ```
-    sudo dnf remove vim-minimal
+1. 下载安装脚本：
+    ```sh
+    curl -s https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_LazyVim.sh -o install_LazyVim.sh
     ```
 
-#### 安装 *neovim*
+1. 运行脚本：
+    ```
+    chmod +x install_LazyVim.sh
+    ./install_LazyVim.sh
+    ```
 
-然后安装[*neovim*](https://neovim.io/)。
+#### 方法二：手动安装
 
-- Debian / Ubuntu
-  
-  由于*LazyVim*需要*neovim* 0.8或更高版本，而在Ubuntu 22.04中，neovim的版本是0.6.1。因此，我们需要从官方网站安装更新的*neovim*。
+1. 卸载 *vim-tiny* 或 *vim-minimal*
 
-    1. 从[官方网站](https://github.com/neovim/neovim/releases)下载预编译的*neovim*二进制文件
+    Debian系统默认的vim是*vim-tiny*，Fedora系统默认的vim是*vim-minimal*，这两个版本都不支持插件。在使用本配置之前，需要先检查你的vim版本。
+
+    ```
+    vi --version
+    ```
+
+    如果输出中有"Small version without GUI"，说明你的vim是*vim-tiny*或*vim-minimal*。你可以卸载它：
+
+    - Debian / Ubuntu
         ```
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+        sudo apt remove vim-tiny
         ```
-    2. 解压下载的文件
+    - Fedora
         ```
-        sudo tar -C /opt -xzf nvim-linux64.tar.gz
+        sudo dnf remove vim-minimal
         ```
-        这将*neovim*安装到*/opt/nvim-linux64*目录。
-    3. 创建一个符号链接到*neovim*可执行文件
-        ```
-        sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
-        ```
-- Fedora
+
+1. 安装 *Neovim*
+
+    然后安装[*Neovim*](https://neovim.io/)。
+
+    - Debian / Ubuntu
     
-    在Fedora 40中，*neovim*的版本是0.9.5，这个版本足够新，可以使用*LazyVim*。所以我们可以直接使用*dnf*安装它。
-        ```
-        sudo dnf install neovim
-        ```
+    由于*LazyVim*需要*Neovim* 0.8或更高版本，而在Ubuntu 22.04中，Neovim的版本是0.6.1。因此，我们需要从官方网站安装更新的*Neovim*。
 
-### 安装 *LazyVim*
-
-参考[官方网站](https://www.lazyvim.org/installation)，我们可以使用以下命令安装*LazyVim*：   
+        1. 从[官方网站](https://github.com/neovim/neovim/releases)下载预编译的*Neovim*二进制文件
+            ```
+            curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+            ```
+        1. 解压下载的文件
+            ```
+            sudo tar -C /opt -xzf nvim-linux64.tar.gz
+            ```
+            这将*Neovim*安装到`/opt/nvim-linux64`目录。
+        1. 创建一个符号链接到*Neovim*可执行文件
+            ```
+            sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
+            ```
+    - Fedora
+        
+        在Fedora 40中，*Neovim*的版本是0.9.5，这个版本足够新，可以使用*LazyVim*。所以我们可以直接使用*dnf*安装它。
+            ```
+            sudo dnf install neovim
+            ```
 
 1. 安装 *LazyVim*
-    ```
-    git clone https://github.com/LazyVim/starter ~/.config/nvim
-    ```
-2. 删除`.git`文件夹，这样你就可以将它添加到你自己的仓库中
-    ```
-    rm -rf ~/.config/nvim/.git
-    ```
-3. 第一次运行*nvim*会自动安装插件。这可能需要一段时间才能完成。
-    ```
-    nvim
-    ```
-4. 退出*nvim*，然后重新打开*nvim*，你就可以看到*LazyVim*的效果了。
+
+    参考[官方网站](https://www.lazyvim.org/installation)，我们可以使用以下命令安装*LazyVim*：   
+
+    1. 安装 *LazyVim*
+        ```
+        git clone https://github.com/LazyVim/starter ~/.config/nvim
+        ```
+    1. 删除`.git`文件夹，这样你就可以将它添加到你自己的仓库中
+        ```
+        rm -rf ~/.config/nvim/.git
+        ```
+    1. 第一次运行*nvim*会自动安装插件。这可能需要一段时间才能完成。
+        ```
+        nvim
+        ```
+    1. 退出*nvim*，然后重新打开*nvim*，你就可以看到*LazyVim*的效果了。
+
+## 替换苹果系统默认的终端
+
+在安装完LazyVim之后，我发现在macOS Terminal中的LazyVim显示效果非常差，颜色暗淡，对比度低：
+
+![LazyVim in macOS Terminal](https://img.jinli.io/images/2024/05/19/lazyvim_macos_terminal.md.png)
+
+原因是macOS Terminal的颜色方案不支持256真彩色，而LazyVim默认使用的是256色的颜色方案。
+我听说[iTerm2](https://iterm2.com/)支持256真彩色，所以我决定从macOS内置终端迁移到iTerm2。
+安装完iTerm2之后，你需要设置iTerm2使用之前下载并安装的Meslo Nerd字体。
+然后在iTerm2中打开LazyVim，现在看起来好多了：
+
+![LazyVim in iTerm2](https://img.jinli.io/images/2024/05/19/lazyvim_iterm2.md.png)
