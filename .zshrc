@@ -83,7 +83,7 @@ SAVEHIST="100000"
 plugins=(
     git
     zsh-autosuggestions
-    zsh-syntax-highlighting
+	  fast-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -116,6 +116,7 @@ source $ZSH/oh-my-zsh.sh
 alias cp="cp -v"
 alias mv="mv -v"
 alias rm="rm -v"
+alias vi="vim"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
