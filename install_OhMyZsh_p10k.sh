@@ -111,7 +111,7 @@ git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git \
   ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
 
 # Check with the user if they want to install Meslo Nerd Fonts
-read -p "Do you want to install LazyVim? (y/n): " choice
+read -p "Do you want to install Meslo Nerd Fonts? (y/n): " choice
 case "$choice" in
     y|Y )
         echo "Installing Nerd Fonts ...";
