@@ -72,7 +72,7 @@ if [ -f /etc/os-release ]; then
             echo "Detected Fedora-based system"
             install_zsh_fedora
             ;;
-        arch)
+        arch|manjaro|endeavouros|garuda|artix|archcraft)
             echo "Detected Arch-based system"
             install_zsh_arch
             ;;
