@@ -83,7 +83,7 @@ SAVEHIST="100000"
 plugins=(
     git
     zsh-autosuggestions
-    zsh-syntax-highlighting
+	  fast-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh

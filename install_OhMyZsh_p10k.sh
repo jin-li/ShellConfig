@@ -105,24 +105,32 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 echo "Installing Zsh Autosuggestions ..."
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# Install Zsh Syntax Highlighting
-echo "Installing Zsh Syntax Highlighting ..."
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# Install Fast Syntax Highlighting
+echo "Installing Fast Syntax Highlighting ..."
+git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git \
+  ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
 
-# Install the Nerd Fonts
-echo "Installing Meslo Nerd Fonts ..."
-USER_FONT_DIR="$HOME/.local/share/fonts"
-if [ ! -d "$USER_FONT_DIR" ]; then
-    echo "Creating directory $USER_FONT_DIR"
-    mkdir -p "$USER_FONT_DIR"
-else
-    echo "Directory $USER_FONT_DIR already exists"
-fi
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P "$USER_FONT_DIR"
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P "$USER_FONT_DIR"
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P "$USER_FONT_DIR"
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P "$USER_FONT_DIR"
-fc-cache -f -v
+# Check with the user if they want to install Meslo Nerd Fonts
+read -p "Do you want to install LazyVim? (y/n): " choice
+case "$choice" in
+    y|Y )
+        echo "Installing Nerd Fonts ...";
+        USER_FONT_DIR="$HOME/.local/share/fonts"
+        if [ ! -d "$USER_FONT_DIR" ]; then
+            echo "Creating directory $USER_FONT_DIR"
+            mkdir -p "$USER_FONT_DIR"
+        else
+            echo "Directory $USER_FONT_DIR already exists"
+        fi
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P "$USER_FONT_DIR"
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P "$USER_FONT_DIR"
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P "$USER_FONT_DIR"
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P "$USER_FONT_DIR"
+        fc-cache -f -v
+        ;;
+    n|N ) echo "Nerd Fonts will not be installed";;
+    * ) echo "Invalid choice. Nerd Fonts will not be installed";;
+esac
 
 # Directory to be created
 SHELL_CONFIG_PATH="$HOME/Documents/GitHub"
@@ -186,4 +194,4 @@ echo "Shell configuration has been successfully installed!"
 #/bin/bash "./install_LazyVim.sh"
 
 # Finish the installation
-echo "Installation complete. Please restart your shell to apply the changes."
+echo "Installation complete. You need to apply the Nerd Fonts in your terminal settings. Please restart your terminal to apply the changes."
