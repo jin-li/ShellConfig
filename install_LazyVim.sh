@@ -36,6 +36,18 @@ uninstall_vim_arch() {
     done
 }
 
+# Function to check and uninstall Vim on Archcraft
+uninstall_vim_archcraft() {
+    for pkg in archcraft-vim vim; do
+        if pacman -Qs $pkg > /dev/null; then
+            echo "Removing $pkg"
+            sudo pacman -Rns --noconfirm $pkg
+        else
+            echo "$pkg is not installed"
+        fi
+    done
+}
+
 # Function to check and uninstall Vim on openSUSE-based systems
 uninstall_vim_opensuse() {
     for pkg in vim; do
@@ -141,9 +153,14 @@ if [ -f /etc/os-release ]; then
             uninstall_vim_fedora
             install_neovim_fedora
             ;;
-        arch)
+        arch|manjaro|endeavouros)
             echo "Detected Arch-based system"
             uninstall_vim_arch
+            install_neovim_arch
+            ;;
+        archcraft)
+            echo "Detected Arch-based system"
+            uninstall_vim_archcraft
             install_neovim_arch
             ;;
         opensuse|suse)
@@ -183,7 +200,7 @@ if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$INSTALLED_NVIM_VERSION" | sort -V | 
                 echo "Detected Fedora-based system"
                 uninstall_neovim_fedora
                 ;;
-            arch)
+            arch|manjaro|endeavouros|garuda|artix|archcraft|archlabs|arcolinux|archbang|archmerge|archstrike|archman|archfi|archbox|archlabs)
                 echo "Detected Arch-based system"
                 uninstall_neovim_arch
                 ;;
@@ -231,7 +248,6 @@ echo "##########################################################################
 echo "### Added after installing LazyVim, only valid when Neovim is installed ###" >> $HOME/.zshrc
 if [ -z "$(command -v vim)" ]; then
     echo "alias vim='nvim'" >> $HOME/.zshrc
-    echo "alias vi='nvim'" >> $HOME/.zshrc
 fi
 echo "export EDITOR='nvim'" >> $HOME/.zshrc
 echo "###########################################################################" >> $HOME/.zshrc`
