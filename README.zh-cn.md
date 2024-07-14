@@ -22,6 +22,8 @@
     ```
 
 1. 运行脚本：
+
+   注意：不要在`root`用户，也不要使用`sudo`来运行本脚本。以普通用户运行，运行中可能需要你输入密码，到时再输入即可。
     ```
     chmod +x install_OhMyZsh_p10k.sh
     ./install_OhMyZsh_p10k.sh
