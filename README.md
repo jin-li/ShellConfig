@@ -24,12 +24,14 @@ Configurations for Linux shell and *Neovim*
     ```
 
 1. Run the script:
+
+    Do NOT run it in `root` NOR using `sudo`, just run it as a normal user. When it prompts for password, then enter the `root` or `sudo` password.
     ```
     chmod +x install_OhMyZsh_p10k.sh
     ./install_OhMyZsh_p10k.sh
     ```
 
-#### Manual Install
+#### Method 2: Manual Install
 
 1. Install Meslo Nerd Font
    
