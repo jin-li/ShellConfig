@@ -97,6 +97,13 @@ fi
 echo "Installing Oh My Zsh ..."
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+check_installation() {
+    if [ $? -ne 0 ]; then
+        echo "Oh My Zsh installation failed. Please check and try again."
+        exit 1
+    fi
+}
+
 # Install Powerlevel10k
 echo "Installing Powerlevel10k ..."
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
