@@ -56,65 +56,65 @@
 
      1. 安装依赖的工具库 (*git*, *wget*, *python3*, *pip3*)
         
-         ```
+         ```sh
          sudo apt install wget git python3-dev python3-pip python3-setuptools
          ```
     
      1. 安装 *zsh*
-        ```
+        ```sh
         sudo apt install zsh
         ```
 
     - Arch Linux 或 Manjaro
-        ```
+        ```sh
         sudo pacman -S zsh
         ```
     
     - macOS已自带zsh
 
     - Fedora
-        ```
+        ```sh
         sudo dnf install zsh
         ```
 
 1. 通过*wget*安装 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)
     
-    ```
+    ```sh
     sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     ```
 
 1. 安装 [powerlevel10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
    
-    ```
+    ```sh
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     ```
 
 1. 安装插件和工具
    
     - 命令自动补全建议zsh-autosuggestions
-        ```
+        ```sh
         git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
         ```
-    - 命令语法高亮zsh-syntax-highlighting
-        ```
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    - 命令语法高亮fast-syntax-highlighting
+        ```sh
+        git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
         ```
 
 1. 下载配置文件，并链接到用户根目录下
     
     1. 从GitHub下载 *ShellConfig*
-        ```
+        ```sh
         mkdir -p ~/Documents/GitHub
         cd ~/Documents/GitHub
         git clone https://github.com/jin-li/ShellConfig.git 
         ```
     1. 备份旧配置文件
-        ```
+        ```sh
         mv ~/.bashrc ~/.bashrc_bak
         mv ~/.zshrc ~/.zshrc_bak
         ```
     1. 将配置文件链接到 *home* 目录
-        ```
+        ```sh
         ln ~/Documents/GitHub/ShellConfig/.bashrc ~/.bashrc
         ln ~/Documents/GitHub/ShellConfig/.zshrc ~/.zshrc
         ln ~/Documents/GitHub/ShellConfig/.p10k.zsh ~/.p10k.zsh
@@ -140,7 +140,7 @@
     ```
 
 1. 运行脚本：
-    ```
+    ```sh
     chmod +x install_LazyVim.sh
     ./install_LazyVim.sh
     ```
@@ -151,18 +151,18 @@
 
     Debian系统默认的vim是*vim-tiny*，Fedora系统默认的vim是*vim-minimal*，这两个版本都不支持插件。在使用本配置之前，需要先检查你的vim版本。
 
-    ```
+    ```sh
     vi --version
     ```
 
     如果输出中有"Small version without GUI"，说明你的vim是*vim-tiny*或*vim-minimal*。你可以卸载它：
 
     - Debian / Ubuntu
-        ```
+        ```sh
         sudo apt remove vim-tiny
         ```
     - Fedora
-        ```
+        ```sh
         sudo dnf remove vim-minimal
         ```
 
@@ -175,22 +175,22 @@
     由于*LazyVim*需要*Neovim* 0.8或更高版本，而在Ubuntu 22.04中，Neovim的版本是0.6.1。因此，我们需要从官方网站安装更新的*Neovim*。
 
         1. 从[官方网站](https://github.com/neovim/neovim/releases)下载预编译的*Neovim*二进制文件
-            ```
+            ```sh
             curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
             ```
         1. 解压下载的文件
-            ```
+            ```sh
             sudo tar -C /opt -xzf nvim-linux64.tar.gz
             ```
             这将*Neovim*安装到`/opt/nvim-linux64`目录。
         1. 创建一个符号链接到*Neovim*可执行文件
-            ```
+            ```sh
             sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
             ```
     - Fedora
         
         在Fedora 40中，*Neovim*的版本是0.9.5，这个版本足够新，可以使用*LazyVim*。所以我们可以直接使用*dnf*安装它。
-            ```
+            ```sh
             sudo dnf install neovim
             ```
 
@@ -199,15 +199,15 @@
     参考[官方网站](https://www.lazyvim.org/installation)，我们可以使用以下命令安装*LazyVim*：   
 
     1. 安装 *LazyVim*
-        ```
+        ```sh
         git clone https://github.com/LazyVim/starter ~/.config/nvim
         ```
     1. 删除`.git`文件夹，这样你就可以将它添加到你自己的仓库中
-        ```
+        ```sh
         rm -rf ~/.config/nvim/.git
         ```
     1. 第一次运行*nvim*会自动安装插件。这可能需要一段时间才能完成。
-        ```
+        ```sh
         nvim
         ```
     1. 退出*nvim*，然后重新打开*nvim*，你就可以看到*LazyVim*的效果了。
