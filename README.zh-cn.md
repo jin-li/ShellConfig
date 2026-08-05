@@ -36,6 +36,8 @@ chmod +x install-oh-my-posh.sh
 
 如需更改仓库目录，可在运行前设置 `SHELL_CONFIG_DIR`。完成后重启终端，或运行 `exec zsh`。
 
+在 HPC 集群上，脚本会先询问是否拥有 `sudo` 权限，然后检查 `curl`、`git`、`unzip` 和 `zsh`。如果没有 `sudo` 且只有 `zsh` 缺失，脚本可以在用户目录 `~/.local`（或 `$SHELL_CONFIG_PREFIX`）下自行编译 ncurses 和 zsh，不会修改系统文件。脚本需要编译器和 `make`；如有需要，请先通过集群的 module 加载它们。安装结束时会显示实际的 `zsh` 路径。其他缺失的工具需要通过集群环境或管理员提供。
+
 安装后的相关文件位置：
 
 - 仓库：`~/Documents/GitHub/ShellConfig`（或 `$SHELL_CONFIG_DIR`）
@@ -70,6 +72,8 @@ curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_La
 chmod +x install_LazyVim.sh
 ./install_LazyVim.sh
 ```
+
+在 HPC 上，此脚本同样会先询问 `sudo` 并检查 `git` 和 `nvim`。未经确认不会执行特权安装。如果没有 `sudo` 且缺少依赖，请通过集群 module 加载，或先在用户目录安装后再重新运行。
 
 第一次启动 `nvim` 时会自动下载 LazyVim 插件，启动后请运行 `:checkhealth`。旧版 `.vimrc` 与 LazyVim 相互独立；其中的 Vundle 插件只有在安装 Vundle 后才会加载。为了获得更好的色彩和 Nerd Font 显示效果，macOS 推荐使用 iTerm2，Windows 推荐使用 Windows Terminal。
 

@@ -7,6 +7,9 @@ REPO_DIR="${SHELL_CONFIG_DIR:-$HOME/Documents/GitHub/ShellConfig}"
 POSH_DIR="$HOME/.config/oh-my-posh"
 PLUGIN_DIR="$HOME/.local/share/zsh/plugins"
 PLUGIN_LOCATION=""
+LOCAL_PREFIX="${SHELL_CONFIG_PREFIX:-$HOME/.local}"
+BUILD_ROOT="${SHELL_CONFIG_BUILD_DIR:-$HOME/.cache/shellconfig-build}"
+HAS_SUDO=0
 
 log() { printf '\n==> %s\n' "$*"; }
 die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
@@ -15,25 +18,101 @@ if [[ ${EUID:-$(id -u)} -eq 0 ]]; then
   die "Run this script as your normal user, not as root or with sudo."
 fi
 
+ask_sudo() {
+  printf 'Do you have sudo privileges on this machine? [Y/n] '
+  read -r answer
+  if [[ ! "$answer" =~ ^([nN][oO]?|[fF])$ ]] && command -v sudo >/dev/null 2>&1 && sudo -v; then
+    HAS_SUDO=1
+  else
+    printf 'Continuing without sudo.\n'
+  fi
+}
+
+download_file() {
+  local url=$1 destination=$2
+  if command -v curl >/dev/null 2>&1; then
+    curl -fL --retry 3 "$url" -o "$destination"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -O "$destination" "$url"
+  else
+    die "curl or wget is required to download source files."
+  fi
+}
+
+build_ncurses() {
+  log "Building ncurses in $LOCAL_PREFIX"
+  local archive="$BUILD_ROOT/ncurses.tar.gz"
+  mkdir -p "$BUILD_ROOT"
+  download_file "https://invisible-island.net/archives/ncurses/ncurses.tar.gz" "$archive"
+  tar -xzf "$archive" -C "$BUILD_ROOT"
+  local source_dir
+  source_dir=$(find "$BUILD_ROOT" -maxdepth 1 -type d -name 'ncurses-*' | sort | tail -n1)
+  [[ -n "$source_dir" ]] || die "Could not find the extracted ncurses source directory."
+  (cd "$source_dir" && ./configure --prefix="$LOCAL_PREFIX" --with-shared --without-debug --enable-widec && \
+    make -j"$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)" && make install)
+}
+
+build_zsh() {
+  log "Building zsh in $LOCAL_PREFIX"
+  command -v make >/dev/null 2>&1 || die "make is required to build zsh without sudo."
+  command -v cc >/dev/null 2>&1 || die "a C compiler (cc) is required to build zsh without sudo."
+  mkdir -p "$BUILD_ROOT" "$LOCAL_PREFIX"
+  if [[ ! -f "$LOCAL_PREFIX/include/ncurses.h" && ! -f "$LOCAL_PREFIX/include/ncurses/curses.h" ]]; then
+    build_ncurses
+  fi
+  local archive="$BUILD_ROOT/zsh.tar.xz"
+  download_file "https://www.zsh.org/pub/zsh-latest.tar.xz" "$archive"
+  tar -xJf "$archive" -C "$BUILD_ROOT"
+  local source_dir
+  source_dir=$(find "$BUILD_ROOT" -maxdepth 1 -type d -name 'zsh-*' | sort | tail -n1)
+  [[ -n "$source_dir" ]] || die "Could not find the extracted zsh source directory."
+  (cd "$source_dir" && CPPFLAGS="-I$LOCAL_PREFIX/include" LDFLAGS="-L$LOCAL_PREFIX/lib" \
+    ./configure --prefix="$LOCAL_PREFIX" && \
+    make -j"$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)" && make install)
+  export PATH="$LOCAL_PREFIX/bin:$PATH"
+  printf 'User-local zsh installed at %s/bin/zsh\n' "$LOCAL_PREFIX"
+}
+
 install_linux_dependencies() {
   # shellcheck disable=SC1091
   . /etc/os-release
-  case "${ID:-}" in
-    ubuntu|debian|pop|deepin|linuxmint)
-      sudo apt-get update
-      sudo apt-get install -y curl git zsh unzip
-      ;;
-    fedora|rhel|centos|rocky|almalinux)
-      sudo dnf install -y curl git zsh unzip
-      ;;
-    arch|manjaro|endeavouros|garuda|artix)
-      sudo pacman -Syu --needed --noconfirm curl git zsh unzip
-      ;;
-    opensuse*|sles)
-      sudo zypper --non-interactive install curl git zsh unzip
-      ;;
-    *) die "Unsupported Linux distribution: ${PRETTY_NAME:-${ID:-unknown}}" ;;
-  esac
+  local required=(curl git unzip zsh)
+  local missing=()
+  for command_name in "${required[@]}"; do
+    command -v "$command_name" >/dev/null 2>&1 || missing+=("$command_name")
+  done
+  [[ ${#missing[@]} -eq 0 ]] && return
+
+  if (( HAS_SUDO )); then
+    case "${ID:-}" in
+      ubuntu|debian|pop|deepin|linuxmint)
+        sudo apt-get update
+        sudo apt-get install -y "${missing[@]}"
+        ;;
+      fedora|rhel|centos|rocky|almalinux)
+        sudo dnf install -y "${missing[@]}"
+        ;;
+      arch|manjaro|endeavouros|garuda|artix)
+        sudo pacman -Syu --needed --noconfirm "${missing[@]}"
+        ;;
+      opensuse*|sles)
+        sudo zypper --non-interactive install "${missing[@]}"
+        ;;
+      *) die "Unsupported Linux distribution: ${PRETTY_NAME:-${ID:-unknown}}" ;;
+    esac
+  else
+    local missing_without_zsh=()
+    for command_name in "${missing[@]}"; do
+      [[ "$command_name" == zsh ]] || missing_without_zsh+=("$command_name")
+    done
+    if [[ ${#missing_without_zsh[@]} -gt 0 ]]; then
+      die "Missing dependencies without sudo: ${missing_without_zsh[*]}. Install them or load them with your HPC modules, then rerun."
+    fi
+    printf 'zsh is missing and sudo is unavailable. Build zsh and ncurses under %s? [y/N] ' "$LOCAL_PREFIX"
+    read -r answer
+    [[ "$answer" =~ ^[Yy]([Ee][Ss])?$ ]] || die "zsh is required. Rerun and choose the local zsh build, or load zsh from your HPC environment."
+    build_zsh
+  fi
 }
 
 install_oh_my_posh() {
@@ -128,6 +207,7 @@ install_font() {
   esac
 }
 
+ask_sudo
 install_oh_my_posh
 clone_or_update
 install_plugins
@@ -140,6 +220,7 @@ printf '\nConfiguration summary:\n'
 printf '  Repository:     %s\n' "$REPO_DIR"
 printf '  Theme:          %s -> %s\n' "$POSH_DIR/jinli.omp.json" "$REPO_DIR/jinli.omp.json"
 printf '  Zsh config:     %s -> %s\n' "$HOME/.zshrc" "$REPO_DIR/.zshrc"
+printf '  Zsh executable: %s\n' "$(command -v zsh)"
 printf '  Zsh plugins:    %s\n' "$PLUGIN_LOCATION"
 printf '  Font:           MesloLGM Nerd Font (if selected)\n'
 printf '\nRestart your terminal or run: exec zsh\n'

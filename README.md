@@ -36,6 +36,8 @@ The installer:
 
 Set `SHELL_CONFIG_DIR` before running the script to use a different checkout directory. Restart the terminal afterward, or run `exec zsh`.
 
+On an HPC system, the script asks about `sudo` before installing anything. It first checks for `curl`, `git`, `unzip`, and `zsh`. If `sudo` is unavailable and only `zsh` is missing, it can build ncurses and zsh locally under `~/.local` (or `$SHELL_CONFIG_PREFIX`) without changing system files. The script checks for a compiler and `make`; load those through your cluster's modules first if needed. The final summary reports the resulting `zsh` executable path. Other missing tools must be provided by the cluster or installed by an administrator.
+
 After installation, the relevant files are located at:
 
 - Repository: `~/Documents/GitHub/ShellConfig` (or `$SHELL_CONFIG_DIR`)
@@ -70,6 +72,8 @@ curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_La
 chmod +x install_LazyVim.sh
 ./install_LazyVim.sh
 ```
+
+On HPC systems, this installer also asks about `sudo` and checks for `git` and `nvim` first. It never attempts a privileged installation without confirmation. If either dependency is missing without `sudo`, load it through the cluster's environment modules or install it in your user space before rerunning.
 
 The first `nvim` launch downloads the LazyVim plugins. Run `:checkhealth` after startup. The legacy `.vimrc` is independent of LazyVim; its Vundle plugins are optional and are loaded only when Vundle is installed. A modern terminal such as iTerm2 on macOS or Windows Terminal on Windows is recommended for good color and Nerd Font support.
 
