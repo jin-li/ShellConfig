@@ -1,5 +1,5 @@
-# User-installed command-line tools.
-export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.mimocode/bin:$HOME/.opencode/bin:$PATH"
+# Machine-specific/local configuration
+[[ -f $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
 
 # Oh My Zsh is optional. When present, it manages the two plugins below.
 if [[ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
