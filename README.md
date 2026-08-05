@@ -13,6 +13,19 @@ Shared shell and Neovim configuration for macOS, Linux, and Windows.
 
 The supplied `.zshrc` does not require Homebrew, Oh My Zsh, or Neovim. It enables each optional integration only when it is available.
 
+### Local Zsh configuration
+
+The shared `.zshrc` sources `~/.zshrc.local` first when that file exists. Keep machine-specific settings there—private environment variables, workstation-only aliases, cluster module setup, and local tool paths—while keeping portable configuration in this repository. `~/.zshrc.local` is intentionally not managed or symlinked by the installer.
+
+For example:
+
+```zsh
+export PATH="$HOME/.local/bin:$PATH"
+alias connect-hpc='ssh user@example.org'
+```
+
+After installation, the shared configuration is `~/.zshrc` → repository `.zshrc`; the optional local configuration is `~/.zshrc.local`.
+
 ### macOS and Linux
 
 Supported Linux families include Debian/Ubuntu, Fedora/RHEL, Arch, and openSUSE. On macOS, install [Homebrew](https://brew.sh/) first.

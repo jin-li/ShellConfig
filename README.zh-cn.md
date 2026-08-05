@@ -13,6 +13,19 @@
 
 仓库中的 `.zshrc` 不强制依赖 Homebrew、Oh My Zsh 或 Neovim，仅在对应程序存在时启用相关配置。
 
+### 本地 Zsh 配置
+
+共享的 `.zshrc` 会在文件存在时优先加载 `~/.zshrc.local`。请将机器专属配置放在那里，例如私有环境变量、仅工作站使用的别名、集群 module 设置和本地工具路径；可移植的公共配置则保留在本仓库中。安装脚本不会管理或创建这个文件的软链接。
+
+例如：
+
+```zsh
+export PATH="$HOME/.local/bin:$PATH"
+alias connect-hpc='ssh user@example.org'
+```
+
+安装后，共享配置为 `~/.zshrc` → 仓库中的 `.zshrc`；可选的本地配置文件为 `~/.zshrc.local`。
+
 ### macOS 和 Linux
 
 支持 Debian/Ubuntu、Fedora/RHEL、Arch 和 openSUSE 等主流 Linux 系列。macOS 请先安装 [Homebrew](https://brew.sh/)。
