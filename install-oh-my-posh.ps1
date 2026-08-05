@@ -50,4 +50,9 @@ if ($InstallFont -match '^(y|yes)$') {
     Write-Host 'Configure Windows Terminal to use "MesloLGM Nerd Font".'
 }
 
-Write-Host "Installation complete. Restart PowerShell or run: . `$PROFILE"
+Write-Host "`nConfiguration summary:"
+Write-Host "  Repository:  $RepoDir"
+Write-Host "  Theme:       $ThemeLink -> $(Join-Path $RepoDir 'jinli.omp.json')"
+Write-Host "  PowerShell:  $PROFILE"
+Write-Host "  Font:        MesloLGM Nerd Font (if selected)"
+Write-Host "`nInstallation complete. Restart PowerShell or run: . `$PROFILE"

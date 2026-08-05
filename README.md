@@ -36,6 +36,13 @@ The installer:
 
 Set `SHELL_CONFIG_DIR` before running the script to use a different checkout directory. Restart the terminal afterward, or run `exec zsh`.
 
+After installation, the relevant files are located at:
+
+- Repository: `~/Documents/GitHub/ShellConfig` (or `$SHELL_CONFIG_DIR`)
+- Zsh configuration: `~/.zshrc` → repository `.zshrc`
+- Oh My Posh theme: `~/.config/oh-my-posh/jinli.omp.json` → repository `jinli.omp.json`
+- Standalone Zsh plugins: `~/.local/share/zsh/plugins` (or the Oh My Zsh custom plugin directory when Oh My Zsh exists)
+
 ### Windows PowerShell
 
 Open PowerShell as your normal user and run:
@@ -50,6 +57,8 @@ The PowerShell installer uses WinGet to install Oh My Posh (and Git if needed), 
 
 After installation, select **MesloLGM Nerd Font** in the terminal profile. For WSL, run the Linux installer inside WSL but install/configure the font on Windows.
 
+The PowerShell profile is normally stored at `$PROFILE` (for example, `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`). The theme link is `~\.config\oh-my-posh\jinli.omp.json`; the repository is `Documents\GitHub\ShellConfig`.
+
 ## Neovim configuration
 
 LazyVim is intentionally a separate installer from Oh My Posh: Oh My Posh configures the shell prompt, while LazyVim replaces the Neovim configuration and downloads editor plugins. Keeping them separate lets you use the prompt without Neovim and avoids changing editor files during shell setup.
@@ -63,3 +72,11 @@ chmod +x install_LazyVim.sh
 ```
 
 The first `nvim` launch downloads the LazyVim plugins. Run `:checkhealth` after startup. The legacy `.vimrc` is independent of LazyVim; its Vundle plugins are optional and are loaded only when Vundle is installed. A modern terminal such as iTerm2 on macOS or Windows Terminal on Windows is recommended for good color and Nerd Font support.
+
+After installation, the editor files are located at:
+
+- LazyVim configuration: `~/.config/nvim`
+- Neovim data: `~/.local/share/nvim`
+- Neovim state: `~/.local/state/nvim`
+- Neovim cache: `~/.cache/nvim`
+- Vim configuration: `~/.vimrc` → repository `.vimrc` (when the repository is present; any previous file is backed up as `~/.vimrc-pre-lazyvim`)

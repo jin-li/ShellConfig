@@ -6,6 +6,7 @@ REPO_URL="https://github.com/jin-li/ShellConfig.git"
 REPO_DIR="${SHELL_CONFIG_DIR:-$HOME/Documents/GitHub/ShellConfig}"
 POSH_DIR="$HOME/.config/oh-my-posh"
 PLUGIN_DIR="$HOME/.local/share/zsh/plugins"
+PLUGIN_LOCATION=""
 
 log() { printf '\n==> %s\n' "$*"; }
 die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
@@ -85,10 +86,12 @@ install_plugins() {
   log "Installing Zsh plugins"
   if [[ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
     local custom_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+    PLUGIN_LOCATION="$custom_dir"
     mkdir -p "$custom_dir"
     clone_plugin https://github.com/zsh-users/zsh-autosuggestions.git "$custom_dir/zsh-autosuggestions"
     clone_plugin https://github.com/zdharma-continuum/fast-syntax-highlighting.git "$custom_dir/fast-syntax-highlighting"
   else
+    PLUGIN_LOCATION="$PLUGIN_DIR"
     mkdir -p "$PLUGIN_DIR"
     clone_plugin https://github.com/zsh-users/zsh-autosuggestions.git "$PLUGIN_DIR/zsh-autosuggestions"
     clone_plugin https://github.com/zdharma-continuum/fast-syntax-highlighting.git "$PLUGIN_DIR/fast-syntax-highlighting"
@@ -132,4 +135,11 @@ link_configs
 install_font
 
 log "Installation complete"
-printf 'Oh My Posh: %s\nRestart your terminal or run: exec zsh\n' "$(oh-my-posh version)"
+printf 'Oh My Posh: %s\n' "$(oh-my-posh version)"
+printf '\nConfiguration summary:\n'
+printf '  Repository:     %s\n' "$REPO_DIR"
+printf '  Theme:          %s -> %s\n' "$POSH_DIR/jinli.omp.json" "$REPO_DIR/jinli.omp.json"
+printf '  Zsh config:     %s -> %s\n' "$HOME/.zshrc" "$REPO_DIR/.zshrc"
+printf '  Zsh plugins:    %s\n' "$PLUGIN_LOCATION"
+printf '  Font:           MesloLGM Nerd Font (if selected)\n'
+printf '\nRestart your terminal or run: exec zsh\n'

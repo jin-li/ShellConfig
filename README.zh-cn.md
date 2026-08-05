@@ -36,6 +36,13 @@ chmod +x install-oh-my-posh.sh
 
 如需更改仓库目录，可在运行前设置 `SHELL_CONFIG_DIR`。完成后重启终端，或运行 `exec zsh`。
 
+安装后的相关文件位置：
+
+- 仓库：`~/Documents/GitHub/ShellConfig`（或 `$SHELL_CONFIG_DIR`）
+- Zsh 配置：`~/.zshrc` → 仓库中的 `.zshrc`
+- Oh My Posh 主题：`~/.config/oh-my-posh/jinli.omp.json` → 仓库中的 `jinli.omp.json`
+- 独立 Zsh 插件：`~/.local/share/zsh/plugins`（如果已有 Oh My Zsh，则位于其自定义插件目录）
+
 ### Windows PowerShell
 
 以普通用户打开 PowerShell 并运行：
@@ -50,6 +57,8 @@ PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），�
 
 安装后，请在终端配置中选择 **MesloLGM Nerd Font**。如果使用 WSL，请在 WSL 内运行 Linux 脚本，但字体需要安装并配置在 Windows 宿主系统中。
 
+PowerShell 配置文件通常位于 `$PROFILE`（例如 `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`）。主题链接位于 `~\.config\oh-my-posh\jinli.omp.json`，仓库位于 `Documents\GitHub\ShellConfig`。
+
 ## Neovim 配置
 
 LazyVim 与 Oh My Posh 保持为两个独立的安装步骤：Oh My Posh 配置 Shell 提示符，LazyVim 替换 Neovim 配置并下载编辑器插件。这样只使用提示符时不需要安装 Neovim，也不会在配置 Shell 时修改编辑器文件。
@@ -63,3 +72,11 @@ chmod +x install_LazyVim.sh
 ```
 
 第一次启动 `nvim` 时会自动下载 LazyVim 插件，启动后请运行 `:checkhealth`。旧版 `.vimrc` 与 LazyVim 相互独立；其中的 Vundle 插件只有在安装 Vundle 后才会加载。为了获得更好的色彩和 Nerd Font 显示效果，macOS 推荐使用 iTerm2，Windows 推荐使用 Windows Terminal。
+
+安装后的编辑器文件位置：
+
+- LazyVim 配置：`~/.config/nvim`
+- Neovim 数据：`~/.local/share/nvim`
+- Neovim 状态：`~/.local/state/nvim`
+- Neovim 缓存：`~/.cache/nvim`
+- Vim 配置：`~/.vimrc` → 仓库中的 `.vimrc`（仓库存在时创建；原文件会备份为 `~/.vimrc-pre-lazyvim`）

@@ -5,6 +5,7 @@ set -Eeuo pipefail
 MIN_NVIM_VERSION="0.11.2"
 STARTER_URL="https://github.com/LazyVim/starter.git"
 NVIM_CONFIG="$HOME/.config/nvim"
+REPO_DIR="${SHELL_CONFIG_DIR:-$HOME/Documents/GitHub/ShellConfig}"
 
 log() { printf '\n==> %s\n' "$*"; }
 die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
@@ -72,9 +73,38 @@ backup_path "$HOME/.local/share/nvim"
 backup_path "$HOME/.local/state/nvim"
 backup_path "$HOME/.cache/nvim"
 
+link_vimrc() {
+  local source_path=""
+  if [[ -f "$(dirname "${BASH_SOURCE[0]}")/.vimrc" ]]; then
+    source_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.vimrc"
+  elif [[ -f "$REPO_DIR/.vimrc" ]]; then
+    source_path="$REPO_DIR/.vimrc"
+  fi
+
+  if [[ -z "$source_path" ]]; then
+    printf 'Skipping ~/.vimrc: repository .vimrc was not found.\n'
+    return
+  fi
+  if [[ -L "$HOME/.vimrc" && $(readlink "$HOME/.vimrc") == "$source_path" ]]; then
+    return
+  fi
+  if [[ -e "$HOME/.vimrc" || -L "$HOME/.vimrc" ]]; then
+    local backup="$HOME/.vimrc-pre-lazyvim"
+    [[ ! -e "$backup" && ! -L "$backup" ]] || backup="$backup-$(date +%Y%m%d-%H%M%S)"
+    mv "$HOME/.vimrc" "$backup"
+    printf 'Existing Vim configuration moved to %s\n' "$backup"
+  fi
+  ln -s "$source_path" "$HOME/.vimrc"
+}
+
 log "Installing LazyVim starter"
 git clone "$STARTER_URL" "$NVIM_CONFIG"
 rm -rf "$NVIM_CONFIG/.git"
+link_vimrc
 
 log "LazyVim installed"
 printf 'Neovim %s is ready. Start nvim to install plugins, then run :checkhealth.\n' "$NVIM_VERSION"
+printf '\nConfiguration summary:\n'
+printf '  LazyVim config: %s\n' "$NVIM_CONFIG"
+printf '  Vim config:     %s\n' "$HOME/.vimrc"
+printf '  Shell config:   %s (unchanged by this installer)\n' "$HOME/.zshrc"
