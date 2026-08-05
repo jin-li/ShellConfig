@@ -219,7 +219,8 @@ printf 'Oh My Posh: %s\n' "$(oh-my-posh version)"
 printf '\nConfiguration summary:\n'
 printf '  Repository:     %s\n' "$REPO_DIR"
 printf '  Theme:          %s -> %s\n' "$POSH_DIR/jinli.omp.json" "$REPO_DIR/jinli.omp.json"
-printf '  Zsh config:     %s -> %s\n' "$HOME/.zshrc" "$REPO_DIR/.zshrc"
+printf '  Common Zsh:     %s -> %s (GitHub-managed shared config)\n' "$HOME/.zshrc" "$REPO_DIR/.zshrc"
+printf '  Local Zsh:      %s (optional, user-managed; create it for machine-specific settings)\n' "$HOME/.zshrc.local"
 printf '  Zsh executable: %s\n' "$(command -v zsh)"
 printf '  Zsh plugins:    %s\n' "$PLUGIN_LOCATION"
 printf '  Font:           MesloLGM Nerd Font (if selected)\n'
