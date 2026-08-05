@@ -9,7 +9,8 @@
 "  for MS-DOS and Win32:  $VIM\_vimrc
 "	    for OpenVMS:  sys$login:.vimrc
 
-""" Following is for vundle, added on 2018.3.8 by lijin
+""" Optional legacy Vundle plugins. LazyVim does not use this file.
+if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -61,6 +62,7 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
+endif
 
 """ End of vundle plugin
 

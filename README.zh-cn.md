@@ -1,226 +1,65 @@
-语言 : 🇨🇳 | [🇺🇸](./README.md)
+语言：🇨🇳 | [🇺🇸](./README.md)
 
-## 配置shell
+# ShellConfig
 
-效果展示:
+适用于 macOS、Linux 和 Windows 的 Shell 与 Neovim 共享配置。
 
-![Shell Appearence](https://img.jinli.io/images/2024/05/19/shell_appearence.md.jpg)
+## Shell 配置
 
-### 特点
+- 提示符：[Oh My Posh](https://ohmyposh.dev/)，使用锦鲤主题 [`jinli.omp.json`](./jinli.omp.json)
+- Shell：macOS/Linux 使用 Zsh，Windows 使用 PowerShell
+- Zsh 插件：[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) 和 [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
+- Oh My Zsh 为可选组件。如果已经安装，脚本会把插件安装到它的自定义插件目录；否则插件会安装到 `~/.local/share/zsh/plugins`，脚本不会额外安装 Oh My Zsh。
 
-- Shell: [oh-my-zsh](https://ohmyz.sh/)
-- 主题: [powerlevel10k](https://github.com/romkatv/powerlevel10k)
-- 插件: 命令自动补全建议[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions), 命令语法高亮[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting), 命令修正建议[thefuck](https://github.com/nvbn/thefuck)
+仓库中的 `.zshrc` 不强制依赖 Homebrew、Oh My Zsh 或 Neovim，仅在对应程序存在时启用相关配置。
 
-### 安装
+### macOS 和 Linux
 
-#### 方法一：使用脚本自动安装（推荐）
+支持 Debian/Ubuntu、Fedora/RHEL、Arch 和 openSUSE 等主流 Linux 系列。macOS 请先安装 [Homebrew](https://brew.sh/)。
 
-1. 下载安装脚本：
-    ```sh
-    curl -s https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_OhMyZsh_p10k.sh -o install_OhMyZsh_p10k.sh
-    ```
+请以普通用户运行，不要使用 `sudo` 启动脚本：
 
-1. 运行脚本：
+```sh
+curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install-oh-my-posh.sh
+chmod +x install-oh-my-posh.sh
+./install-oh-my-posh.sh
+```
 
-   注意：不要在`root`用户，也不要使用`sudo`来运行本脚本。以普通用户运行，运行中可能需要你输入密码，到时再输入即可。
-    ```
-    chmod +x install_OhMyZsh_p10k.sh
-    ./install_OhMyZsh_p10k.sh
-    ```
+脚本会：
 
-#### 方法二：手动安装
+1. 安装 Zsh 依赖和 Oh My Posh；
+2. 将本仓库克隆或更新到 `~/Documents/GitHub/ShellConfig`；
+3. 根据是否存在 Oh My Zsh，以相应方式安装两个 Zsh 插件；
+4. 将主题链接到 `~/.config/oh-my-posh/jinli.omp.json`；
+5. 将已有的 `~/.zshrc` 移动为 `~/.zshrc-pre-oh-my-posh-jinli`（重名时添加时间戳），然后链接仓库中的 `.zshrc`；
+6. 询问是否安装 Meslo Nerd Font。
 
-1. 安装 Meslo Nerd 字体
-   
-   下载一下四个字体文件：
+如需更改仓库目录，可在运行前设置 `SHELL_CONFIG_DIR`。完成后重启终端，或运行 `exec zsh`。
 
-    - [MesloLGS NF Regular.ttf](https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf)
-    - [MesloLGS NF Bold.ttf](https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf)
-    - [MesloLGS NF Italic.ttf](https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf)
-    - [MesloLGS NF Bold Italic.ttf](https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf)
+### Windows PowerShell
 
-    双击各文件并点击`安装`按钮，然后电脑上包括命令行终端在内的的各个软件就可以使用`MesloLGS NF`字体了。
+以普通用户打开 PowerShell 并运行：
 
-    请参考[p10k Font](https://github.com/romkatv/powerlevel10k#Fonts)来为Windows Power Shell、macOS Terminal等命令行终端工具配置`MesloLGS NF`字体。
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/install-oh-my-posh.ps1 -OutFile install-oh-my-posh.ps1
+.\install-oh-my-posh.ps1
+```
 
+PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），将仓库克隆到 `Documents\GitHub\ShellConfig`，链接同一个锦鲤主题，备份已有 PowerShell Profile，添加提示符初始化命令，并询问是否安装 Meslo 字体。创建符号链接可能需要开启 Windows 开发者模式，或使用管理员 PowerShell。
 
-1. [安装 zsh](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
-    
-    - Ubuntu, Debian 及Debian系衍生系统
-    
-      1. 更新 `apt` 源
-      ```bash
-      sudo apt update
-      ```
+安装后，请在终端配置中选择 **MesloLGM Nerd Font**。如果使用 WSL，请在 WSL 内运行 Linux 脚本，但字体需要安装并配置在 Windows 宿主系统中。
 
-     1. 安装依赖的工具库 (*git*, *wget*, *python3*, *pip3*)
-        
-         ```sh
-         sudo apt install wget git python3-dev python3-pip python3-setuptools
-         ```
-    
-     1. 安装 *zsh*
-        ```sh
-        sudo apt install zsh
-        ```
+## Neovim 配置
 
-    - Arch Linux 或 Manjaro
-        ```sh
-        sudo pacman -S zsh
-        ```
-    
-    - macOS已自带zsh
+LazyVim 与 Oh My Posh 保持为两个独立的安装步骤：Oh My Posh 配置 Shell 提示符，LazyVim 替换 Neovim 配置并下载编辑器插件。这样只使用提示符时不需要安装 Neovim，也不会在配置 Shell 时修改编辑器文件。
 
-    - Fedora
-        ```sh
-        sudo dnf install zsh
-        ```
+当前 LazyVim starter 要求 Neovim 版本不低于 0.11.2。安装脚本不会卸载 Vim 或旧版 Neovim；如果版本过低会提示升级并退出。脚本会在克隆 starter 前备份已有的 Neovim 配置和数据：
 
-1. 通过*wget*安装 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)
-    
-    ```sh
-    sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    ```
+```sh
+curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_LazyVim.sh
+chmod +x install_LazyVim.sh
+./install_LazyVim.sh
+```
 
-1. 安装 [powerlevel10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
-   
-    ```sh
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-    ```
-
-1. 安装插件和工具
-   
-    - 命令自动补全建议zsh-autosuggestions
-        ```sh
-        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-        ```
-    - 命令语法高亮fast-syntax-highlighting
-        ```sh
-        git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
-        ```
-
-1. 下载配置文件，并链接到用户根目录下
-    
-    1. 从GitHub下载 *ShellConfig*
-        ```sh
-        mkdir -p ~/Documents/GitHub
-        cd ~/Documents/GitHub
-        git clone https://github.com/jin-li/ShellConfig.git 
-        ```
-    1. 备份旧配置文件
-        ```sh
-        mv ~/.bashrc ~/.bashrc_bak
-        mv ~/.zshrc ~/.zshrc_bak
-        ```
-    1. 将配置文件链接到 *home* 目录
-        ```sh
-        ln ~/Documents/GitHub/ShellConfig/.bashrc ~/.bashrc
-        ln ~/Documents/GitHub/ShellConfig/.zshrc ~/.zshrc
-        ln ~/Documents/GitHub/ShellConfig/.p10k.zsh ~/.p10k.zsh
-        ```
-
-1.  重启命令行终端
-
-## 配置Vim
-
-![Vim Appearance](https://img.jinli.io/images/2024/05/24/lazyvim.md.png)
-
-### 动机
-
-虽然日常的代码开发中我一般都使用vscode，但是在编辑一些简单的文本文件，或者在服务器上编辑文本文件时，还是用vim更加方便快捷。之前一直使用vim，但总觉得配置起来比较麻烦。于是我准备迁移到neovim，并使用LazyVim，这样就可以做到开箱即用，不需要再配置了。
-
-### 安装
-
-#### 方法一：使用脚本自动安装（推荐）
-
-1. 下载安装脚本：
-    ```sh
-    curl -s https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_LazyVim.sh -o install_LazyVim.sh
-    ```
-
-1. 运行脚本：
-    ```sh
-    chmod +x install_LazyVim.sh
-    ./install_LazyVim.sh
-    ```
-
-#### 方法二：手动安装
-
-1. 卸载 *vim-tiny* 或 *vim-minimal*
-
-    Debian系统默认的vim是*vim-tiny*，Fedora系统默认的vim是*vim-minimal*，这两个版本都不支持插件。在使用本配置之前，需要先检查你的vim版本。
-
-    ```sh
-    vi --version
-    ```
-
-    如果输出中有"Small version without GUI"，说明你的vim是*vim-tiny*或*vim-minimal*。你可以卸载它：
-
-    - Debian / Ubuntu
-        ```sh
-        sudo apt remove vim-tiny
-        ```
-    - Fedora
-        ```sh
-        sudo dnf remove vim-minimal
-        ```
-
-1. 安装 *Neovim*
-
-    然后安装[*Neovim*](https://neovim.io/)。
-
-    - Debian / Ubuntu
-    
-    由于*LazyVim*需要*Neovim* 0.8或更高版本，而在Ubuntu 22.04中，Neovim的版本是0.6.1。因此，我们需要从官方网站安装更新的*Neovim*。
-
-        1. 从[官方网站](https://github.com/neovim/neovim/releases)下载预编译的*Neovim*二进制文件
-            ```sh
-            curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-            ```
-        1. 解压下载的文件
-            ```sh
-            sudo tar -C /opt -xzf nvim-linux64.tar.gz
-            ```
-            这将*Neovim*安装到`/opt/nvim-linux64`目录。
-        1. 创建一个符号链接到*Neovim*可执行文件
-            ```sh
-            sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
-            ```
-    - Fedora
-        
-        在Fedora 40中，*Neovim*的版本是0.9.5，这个版本足够新，可以使用*LazyVim*。所以我们可以直接使用*dnf*安装它。
-            ```sh
-            sudo dnf install neovim
-            ```
-
-1. 安装 *LazyVim*
-
-    参考[官方网站](https://www.lazyvim.org/installation)，我们可以使用以下命令安装*LazyVim*：   
-
-    1. 安装 *LazyVim*
-        ```sh
-        git clone https://github.com/LazyVim/starter ~/.config/nvim
-        ```
-    1. 删除`.git`文件夹，这样你就可以将它添加到你自己的仓库中
-        ```sh
-        rm -rf ~/.config/nvim/.git
-        ```
-    1. 第一次运行*nvim*会自动安装插件。这可能需要一段时间才能完成。
-        ```sh
-        nvim
-        ```
-    1. 退出*nvim*，然后重新打开*nvim*，你就可以看到*LazyVim*的效果了。
-
-## 替换苹果系统默认的终端
-
-在安装完LazyVim之后，我发现在macOS Terminal中的LazyVim显示效果非常差，颜色暗淡，对比度低：
-
-![LazyVim in macOS Terminal](https://img.jinli.io/images/2024/05/19/lazyvim_macos_terminal.md.png)
-
-原因是macOS Terminal的颜色方案不支持256真彩色，而LazyVim默认使用的是256色的颜色方案。
-我听说[iTerm2](https://iterm2.com/)支持256真彩色，所以我决定从macOS内置终端迁移到iTerm2。
-安装完iTerm2之后，你需要设置iTerm2使用之前下载并安装的Meslo Nerd字体。
-然后在iTerm2中打开LazyVim，现在看起来好多了：
-
-![LazyVim in iTerm2](https://img.jinli.io/images/2024/05/19/lazyvim_iterm2.md.png)
+第一次启动 `nvim` 时会自动下载 LazyVim 插件，启动后请运行 `:checkhealth`。旧版 `.vimrc` 与 LazyVim 相互独立；其中的 Vundle 插件只有在安装 Vundle 后才会加载。为了获得更好的色彩和 Nerd Font 显示效果，macOS 推荐使用 iTerm2，Windows 推荐使用 Windows Terminal。
