@@ -133,7 +133,7 @@
             "windows": "\ue62a"
           },
           "style": "diamond",
-          "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}}",
+          "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}} ",
           "type": "os"
         },
         {
@@ -162,17 +162,6 @@
           "style": "powerline",
           "template": " \ue718 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
           "type": "node"
-        },
-        {
-          "background": "p:maroon",
-          "foreground": "p:segment-text",
-          "powerline_symbol": "\ue0b0",
-          "options": {
-            "fetch_version": false
-          },
-          "style": "powerline",
-          "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} ",
-          "type": "python"
         },
         {
           "background": "p:green",
@@ -206,6 +195,15 @@
           "style": "powerline",
           "template": " \u26a1",
           "type": "root"
+        },
+        {
+          "background": "p:yellow",
+          "foreground": "p:segment-text",
+          "invert_powerline": true,
+          "powerline_symbol": "\ue0b2",
+          "style": "powerline",
+          "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} ",
+          "type": "python"
         },
         {
           "background": "p:lavender",
