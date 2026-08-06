@@ -13,6 +13,13 @@
 
 仓库中的 `.zshrc` 不强制依赖 Homebrew、Oh My Zsh 或 Neovim，仅在对应程序存在时启用相关配置。
 
+Zsh 补全不区分大小写。例如，输入 `cat rea` 后按 Tab 可以补全为
+`README.md`。
+
+Zsh 还会维护目录栈：`AUTO_PUSHD` 会记录通过 `cd` 访问过的目录，
+`PUSHD_IGNORE_DUPS` 会避免重复条目。可以使用 `cd -<数字>` 选择编号的
+历史目录，或使用 `dirs -v` 查看目录栈。
+
 ### 本地 Zsh 配置
 
 共享的 `.zshrc` 会在文件存在时优先加载 `~/.zshrc.local`。请将机器专属配置放在那里，例如私有环境变量、仅工作站使用的别名、集群 module 设置和本地工具路径；可移植的公共配置则保留在本仓库中。安装脚本不会管理或创建这个文件的软链接。
@@ -25,6 +32,41 @@ alias connect-hpc='ssh user@example.org'
 ```
 
 安装后，共享配置为 `~/.zshrc` → 仓库中的 `.zshrc`；可选的本地配置文件为 `~/.zshrc.local`。
+
+### NixOS
+
+本仓库也通过 Flake 提供 NixOS 模块。该模块会以声明式方式安装 Zsh、Oh
+My Posh、Zsh 插件和 Meslo Nerd Font，并导入共享的 `.zshrc` 与
+`jinli.omp.json`。模块会将共享 `.zshrc` 中安装脚本使用的路径适配为
+NixOS 的软件包路径和 `/etc` 路径。
+
+将本仓库添加为 Flake 输入：
+
+```nix
+inputs.shell-config.url = "github:jin-li/ShellConfig";
+```
+
+在 NixOS 配置中导入并启用模块：
+
+```nix
+modules = [
+  inputs.shell-config.nixosModules.default
+];
+
+programs.shellConfig.enable = true;
+users.users.<username>.shell = pkgs.zsh;
+```
+
+然后重建所选主机：
+
+```bash
+sudo nixos-rebuild switch --flake .#<host>
+exec zsh
+```
+
+该模块不会管理 `~/.zshrc.local`；请使用该文件保存私有的机器专属环境
+变量和别名。为了正确显示主题图标，请在终端模拟器中选择
+**MesloLGM Nerd Font**。
 
 ### macOS 和 Linux
 
