@@ -1,4 +1,4 @@
-self: { config, lib, pkgs, ... }:
+sourcePath: { config, lib, pkgs, ... }:
 
 let
   # The shared .zshrc expects the non-NixOS installer paths. Adapt only those
@@ -14,7 +14,7 @@ let
       "\"${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh\""
       "\"${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh\""
     ]
-    (builtins.readFile (self.outPath + "/.zshrc"));
+    (builtins.readFile (sourcePath + "/.zshrc"));
 in
 {
   options.programs.shellConfig.enable = lib.mkEnableOption
@@ -27,7 +27,7 @@ in
     };
 
     environment.etc."oh-my-posh/jinli.omp.json".source =
-      self.outPath + "/jinli.omp.json";
+      sourcePath + "/jinli.omp.json";
 
     environment.systemPackages = with pkgs; [
       oh-my-posh
