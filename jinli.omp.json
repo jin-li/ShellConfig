@@ -188,6 +188,21 @@
       "alignment": "right",
       "segments": [
         {
+          "background": "p:green",
+          "background_templates": [
+            "{{ if gt .Code 0 }}p:red{{ end }}"
+          ],
+          "foreground": "p:segment-text",
+          "invert_powerline": true,
+          "powerline_symbol": "\ue0b2",
+          "options": {
+            "always_enabled": true
+          },
+          "style": "powerline",
+          "template": "{{ if .Executed }}{{ if eq .Code 0 }}{{ else }} {{ reason .Code }}{{ end }}{{ end }}",
+          "type": "status"
+        },
+        {
           "background": "p:red",
           "foreground": "p:segment-text",
           "invert_powerline": true,
@@ -221,13 +236,36 @@
           "background": "p:sapphire",
           "foreground": "p:segment-text",
           "invert_powerline": true,
+          "powerline_symbol": "\ue0b2",
           "options": {
             "time_format": "15:04:05"
           },
-          "style": "diamond",
+          "style": "powerline",
           "template": " {{ .CurrentDate | date .Format }} ",
-          "trailing_diamond": "\ue0b4",
           "type": "time"
+        },
+        {
+          "type": "battery",
+          "invert_powerline": true,
+          "powerline_symbol": "\ue0b2",
+          "style": "diamond",
+          "trailing_diamond": "\ue0b4",
+          "foreground": "p:segment-text",
+          "background": "p:green",
+          "background_templates": [
+            "{{ if .Error }}p:red{{ end }}",
+            "{{ if le .Percentage 15 }}p:red{{ end }}",
+            "{{ if and (ge .Percentage 16) (le .Percentage 30) }}p:peach{{ end }}",
+            "{{ if and (ge .Percentage 31) (le .Percentage 45) }}p:yellow{{ end }}",
+            "{{ if and (ge .Percentage 46) (le .Percentage 55) }}p:yellow{{ end }}",
+            "{{ if and (ge .Percentage 56) (le .Percentage 70) }}p:green{{ end }}",
+            "{{ if and (ge .Percentage 71) (le .Percentage 90) }}p:teal{{ end }}",
+            "{{ if and (ge .Percentage 91) (le .Percentage 100) }}p:sapphire{{ end }}"
+          ],
+          "template": "{{ if not .Error }}{{ if eq \"Charging\" .State.String }}\ue315 {{ else if eq \"Full\" .State.String }}~ {{ end }}{{ if le .Percentage 15 }}\udb80\udc7a{{ else if and (ge .Percentage 16) (le .Percentage 30) }}\udb80\udc7b{{ else if and (ge .Percentage 31) (le .Percentage 45) }}\udb80\udc7d{{ else if and (ge .Percentage 46) (le .Percentage 55) }}\udb80\udc7e{{ else if and (ge .Percentage 56) (le .Percentage 70) }}\udb80\udc7f{{ else if and (ge .Percentage 71) (le .Percentage 90) }}\udb80\udc82{{ else }}\udb80\udc79{{ end }} {{ .Percentage }}%{{ end }}",
+          "options": {
+            "display_error": false
+          }
         }
       ],
       "type": "prompt"
