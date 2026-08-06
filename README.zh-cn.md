@@ -26,6 +26,41 @@ alias connect-hpc='ssh user@example.org'
 
 安装后，共享配置为 `~/.zshrc` → 仓库中的 `.zshrc`；可选的本地配置文件为 `~/.zshrc.local`。
 
+### NixOS
+
+本仓库也通过 Flake 提供 NixOS 模块。该模块会以声明式方式安装 Zsh、Oh
+My Posh、Zsh 插件和 Meslo Nerd Font，并导入共享的 `.zshrc` 与
+`jinli.omp.json`。模块会将共享 `.zshrc` 中安装脚本使用的路径适配为
+NixOS 的软件包路径和 `/etc` 路径。
+
+将本仓库添加为 Flake 输入：
+
+```nix
+inputs.shell-config.url = "github:jin-li/ShellConfig";
+```
+
+在 NixOS 配置中导入并启用模块：
+
+```nix
+modules = [
+  inputs.shell-config.nixosModules.default
+];
+
+programs.shellConfig.enable = true;
+users.users.<username>.shell = pkgs.zsh;
+```
+
+然后重建所选主机：
+
+```bash
+sudo nixos-rebuild switch --flake .#<host>
+exec zsh
+```
+
+该模块不会管理 `~/.zshrc.local`；请使用该文件保存私有的机器专属环境
+变量和别名。为了正确显示主题图标，请在终端模拟器中选择
+**MesloLGM Nerd Font**。
+
 ### macOS 和 Linux
 
 支持 Debian/Ubuntu、Fedora/RHEL、Arch 和 openSUSE 等主流 Linux 系列。macOS 请先安装 [Homebrew](https://brew.sh/)。
