@@ -13,6 +13,41 @@ Shared shell and Neovim configuration for macOS, Linux, and Windows.
 
 The supplied `.zshrc` does not require Homebrew, Oh My Zsh, or Neovim. It enables each optional integration only when it is available.
 
+### NixOS
+
+This repository also exposes a NixOS module through its flake. The module
+installs Zsh, Oh My Posh, the Zsh plugins, and Meslo Nerd Font, and imports the
+shared `.zshrc` and `jinli.omp.json` declaratively. It adapts the installer
+paths used by the shared `.zshrc` to NixOS package and `/etc` paths.
+
+Add the repository as a flake input:
+
+```nix
+inputs.shell-config.url = "github:jin-li/ShellConfig";
+```
+
+Import the module and enable it in a NixOS configuration:
+
+```nix
+modules = [
+  inputs.shell-config.nixosModules.default
+];
+
+programs.shellConfig.enable = true;
+users.users.<username>.shell = pkgs.zsh;
+```
+
+Then rebuild the selected host:
+
+```bash
+sudo nixos-rebuild switch --flake .#<host>
+exec zsh
+```
+
+The module does not manage `~/.zshrc.local`; use that file for private,
+machine-specific environment variables and aliases. Configure the terminal
+emulator to use **MesloLGM Nerd Font** for the theme icons.
+
 ### Local Zsh configuration
 
 The shared `.zshrc` sources `~/.zshrc.local` first when that file exists. Keep machine-specific settings there—private environment variables, workstation-only aliases, cluster module setup, and local tool paths—while keeping portable configuration in this repository. `~/.zshrc.local` is intentionally not managed or symlinked by the installer.
