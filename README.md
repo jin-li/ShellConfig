@@ -13,6 +13,9 @@ Shared shell and Neovim configuration for macOS, Linux, and Windows.
 
 The supplied `.zshrc` does not require Homebrew, Oh My Zsh, or Neovim. It enables each optional integration only when it is available.
 
+Zsh completion is case-insensitive. For example, `cat rea` followed by Tab can
+complete to `README.md`.
+
 ### NixOS
 
 This repository also exposes a NixOS module through its flake. The module

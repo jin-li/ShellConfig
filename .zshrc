@@ -11,6 +11,10 @@ else
     source "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
 
+# Make filename and command completion case-insensitive while preserving the
+# spelling entered by the user.
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
 export POSH_CATPPUCCIN_FLAVOR=macchiato
 if command -v oh-my-posh >/dev/null 2>&1; then
   eval "$(oh-my-posh init zsh --config "$HOME/.config/oh-my-posh/jinli.omp.json")"
