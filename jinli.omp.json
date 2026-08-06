@@ -199,7 +199,7 @@
             "always_enabled": true
           },
           "style": "powerline",
-          "template": "{{ if .Executed }}{{ if eq .Code 0 }}{{ else }} {{ reason .Code }}{{ end }}{{ end }}",
+          "template": "{{ if eq .Code 0 }}{{ else }} {{ reason .Code }}{{ end }}",
           "type": "status"
         },
         {
@@ -255,14 +255,37 @@
           "background_templates": [
             "{{ if .Error }}p:red{{ end }}",
             "{{ if le .Percentage 15 }}p:red{{ end }}",
-            "{{ if and (ge .Percentage 16) (le .Percentage 30) }}p:peach{{ end }}",
-            "{{ if and (ge .Percentage 31) (le .Percentage 45) }}p:yellow{{ end }}",
-            "{{ if and (ge .Percentage 46) (le .Percentage 55) }}p:yellow{{ end }}",
-            "{{ if and (ge .Percentage 56) (le .Percentage 70) }}p:green{{ end }}",
+            "{{ if and (ge .Percentage 16) (le .Percentage 30) }}p:maroon{{ end }}",
+            "{{ if and (ge .Percentage 31) (le .Percentage 45) }}p:peach{{ end }}",
+            "{{ if and (ge .Percentage 46) (le .Percentage 55) }}p:peach{{ end }}",
+            "{{ if and (ge .Percentage 56) (le .Percentage 70) }}p:yellow{{ end }}",
             "{{ if and (ge .Percentage 71) (le .Percentage 90) }}p:teal{{ end }}",
-            "{{ if and (ge .Percentage 91) (le .Percentage 100) }}p:sapphire{{ end }}"
+            "{{ if and (ge .Percentage 91) (le .Percentage 100) }}p:green{{ end }}"
           ],
-          "template": "{{ if not .Error }}{{ if eq \"Charging\" .State.String }}\ue315 {{ else if eq \"Full\" .State.String }}~ {{ end }}{{ if le .Percentage 15 }}\udb80\udc7a{{ else if and (ge .Percentage 16) (le .Percentage 30) }}\udb80\udc7b{{ else if and (ge .Percentage 31) (le .Percentage 45) }}\udb80\udc7d{{ else if and (ge .Percentage 46) (le .Percentage 55) }}\udb80\udc7e{{ else if and (ge .Percentage 56) (le .Percentage 70) }}\udb80\udc7f{{ else if and (ge .Percentage 71) (le .Percentage 90) }}\udb80\udc82{{ else }}\udb80\udc79{{ end }} {{ .Percentage }}%{{ end }}",
+          "templates": [
+            "{{ if eq .State.String \"Full\" }} \udb80\udc84 {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 95) }} \udb80\udc79 {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 85) }} \udb80\udc82 {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 75) }} \udb80\udc81 {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 65) }} \udb80\udc80 {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 55) }} \udb80\udc7f {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 45) }} \udb80\udc7e {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 35) }} \udb80\udc7d {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 25) }} \udb80\udc7c {{ .Percentage }}% {{ end }}",
+            "{{ if and (eq .State.String \"Discharging\") (gt .Percentage 15) }} \udb80\udc7b {{ .Percentage }}% {{ end }}",
+            "{{ if eq .State.String \"Discharging\" }} \udb80\udc7a {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 95 }} \udb80\udc85 {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 85 }} \udb80\udc8b {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 75 }} \udb80\udc8a {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 65 }} \udb82\udc9e {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 55 }} \udb80\udc89 {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 45 }} \udb82\udc9d {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 35 }} \udb82\udc9d {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 25 }} \udb80\udc87 {{ .Percentage }}% {{ end }}",
+            "{{ if gt .Percentage 15 }} \udb80\udc86 {{ .Percentage }}% {{ end }}",
+            " \udb82\udc9c {{ .Percentage }}% "
+          ],
+          "templates_logic": "first_match",
           "options": {
             "display_error": false
           }
