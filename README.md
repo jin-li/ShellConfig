@@ -16,6 +16,10 @@ The supplied `.zshrc` does not require Homebrew, Oh My Zsh, or Neovim. It enable
 Zsh completion is case-insensitive. For example, `cat rea` followed by Tab can
 complete to `README.md`.
 
+Zsh also keeps a directory stack: `AUTO_PUSHD` records directories visited by
+`cd`, and `PUSHD_IGNORE_DUPS` avoids repeated entries. Use `cd -<number>` to
+select a numbered previous directory, or inspect the stack with `dirs -v`.
+
 ### NixOS
 
 This repository also exposes a NixOS module through its flake. The module
