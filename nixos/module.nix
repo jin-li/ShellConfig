@@ -14,7 +14,7 @@ let
       "\"${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh\""
       "\"${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh\""
     ]
-    (builtins.readFile (self + "/.zshrc"));
+    (builtins.readFile (self.outPath + "/.zshrc"));
 in
 {
   options.programs.shellConfig.enable = lib.mkEnableOption
@@ -27,7 +27,7 @@ in
     };
 
     environment.etc."oh-my-posh/jinli.omp.json".source =
-      self + "/jinli.omp.json";
+      self.outPath + "/jinli.omp.json";
 
     environment.systemPackages = with pkgs; [
       oh-my-posh
