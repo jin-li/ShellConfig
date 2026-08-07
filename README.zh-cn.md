@@ -89,6 +89,8 @@ chmod +x install-oh-my-posh.sh
 5. 将已有的 `~/.zshrc` 移动为 `~/.zshrc-pre-oh-my-posh-jinli`（重名时添加时间戳），然后链接仓库中的 `.zshrc`；
 6. 询问是否安装 Meslo Nerd Font。
 
+安装 Oh My Posh 后，脚本会检查其可执行文件目录是否在当前 `PATH` 中。如果不在，就会向用户管理的 `~/.zshrc.local` 添加幂等的 `export PATH=...` 配置，确保之后的 Zsh 会话能够找到 Oh My Posh，同时不会修改共享的 `.zshrc`。
+
 如需更改仓库目录，可在运行前设置 `SHELL_CONFIG_DIR`。完成后重启终端，或运行 `exec zsh`。
 
 在 HPC 集群上，脚本会先询问是否拥有 `sudo` 权限，然后检查 `curl`、`git`、`unzip` 和 `zsh`。如果没有 `sudo` 且只有 `zsh` 缺失，脚本可以在用户目录 `~/.local`（或 `$SHELL_CONFIG_PREFIX`）下自行编译 ncurses 和 zsh，不会修改系统文件。脚本需要编译器和 `make`；如有需要，请先通过集群的 module 加载它们。安装结束时会显示实际的 `zsh` 路径。其他缺失的工具需要通过集群环境或管理员提供。

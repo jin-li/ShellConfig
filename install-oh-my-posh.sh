@@ -39,6 +39,48 @@ download_file() {
   fi
 }
 
+resolve_oh_my_posh() {
+  if command -v oh-my-posh >/dev/null 2>&1; then
+    return 0
+  fi
+  local candidate
+  if command -v brew >/dev/null 2>&1; then
+    candidate="$(brew --prefix oh-my-posh 2>/dev/null)/bin/oh-my-posh"
+    if [[ -x "$candidate" ]]; then
+      export PATH="$(dirname "$candidate"):$PATH"
+      return 0
+    fi
+  fi
+  for candidate in \
+    "$LOCAL_PREFIX/bin/oh-my-posh" \
+    "$HOME/.local/bin/oh-my-posh" \
+    "$HOME/bin/oh-my-posh"; do
+    if [[ -x "$candidate" ]]; then
+      export PATH="$(dirname "$candidate"):$PATH"
+      return 0
+    fi
+  done
+  return 1
+}
+
+ensure_oh_my_posh_path() {
+  resolve_oh_my_posh || die "Oh My Posh was installed but its executable could not be located."
+  local executable_dir
+  executable_dir=$(dirname "$(command -v oh-my-posh)")
+  export PATH="$executable_dir:$PATH"
+
+  local local_config="$HOME/.zshrc.local"
+  if [[ ! -f "$local_config" ]] || ! grep -Fq "$executable_dir" "$local_config"; then
+    {
+      printf '\n# Added by ShellConfig: keep Oh My Posh available in interactive Zsh.\n'
+      printf 'export PATH="%s:$PATH"\n' "$executable_dir"
+    } >> "$local_config"
+    printf 'Added Oh My Posh directory to %s\n' "$local_config"
+  else
+    printf 'Oh My Posh directory is already configured in %s\n' "$local_config"
+  fi
+}
+
 build_ncurses() {
   log "Building ncurses in $LOCAL_PREFIX"
   local archive="$BUILD_ROOT/ncurses.tar.gz"
@@ -120,14 +162,14 @@ install_oh_my_posh() {
     command -v brew >/dev/null 2>&1 || die "Homebrew is required on macOS: https://brew.sh"
     command -v git >/dev/null 2>&1 || brew install git
     command -v zsh >/dev/null 2>&1 || brew install zsh
-    if command -v oh-my-posh >/dev/null 2>&1; then
+    if resolve_oh_my_posh; then
       brew upgrade oh-my-posh 2>/dev/null || true
     else
       brew install jandedobbeleer/oh-my-posh/oh-my-posh
     fi
   elif [[ -f /etc/os-release ]]; then
     install_linux_dependencies
-    if ! command -v oh-my-posh >/dev/null 2>&1; then
+    if ! resolve_oh_my_posh; then
       log "Installing Oh My Posh"
       curl -fsSL https://ohmyposh.dev/install.sh | bash -s
       export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
@@ -135,7 +177,7 @@ install_oh_my_posh() {
   else
     die "Only macOS and Linux are supported by this script."
   fi
-  command -v oh-my-posh >/dev/null 2>&1 || die "Oh My Posh was installed but is not on PATH. Add ~/.local/bin or ~/bin to PATH and rerun."
+  resolve_oh_my_posh || die "Oh My Posh was installed but its executable could not be located. Add ~/.local/bin or ~/bin to PATH and rerun."
 }
 
 clone_or_update() {
@@ -209,6 +251,7 @@ install_font() {
 
 ask_sudo
 install_oh_my_posh
+ensure_oh_my_posh_path
 clone_or_update
 install_plugins
 link_configs
@@ -221,6 +264,7 @@ printf '  Repository:     %s\n' "$REPO_DIR"
 printf '  Theme:          %s -> %s\n' "$POSH_DIR/jinli.omp.json" "$REPO_DIR/jinli.omp.json"
 printf '  Common Zsh:     %s -> %s (GitHub-managed shared config)\n' "$HOME/.zshrc" "$REPO_DIR/.zshrc"
 printf '  Local Zsh:      %s (optional, user-managed; create it for machine-specific settings)\n' "$HOME/.zshrc.local"
+printf '  Oh My Posh PATH: %s (configured in %s)\n' "$(dirname "$(command -v oh-my-posh)")" "$HOME/.zshrc.local"
 printf '  Zsh executable: %s\n' "$(command -v zsh)"
 printf '  Zsh plugins:    %s\n' "$PLUGIN_LOCATION"
 printf '  Font:           MesloLGM Nerd Font (if selected)\n'

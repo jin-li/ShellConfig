@@ -89,6 +89,8 @@ The installer:
 5. Moves an existing `~/.zshrc` to `~/.zshrc-pre-oh-my-posh-jinli` (adding a timestamp if necessary), then links this repository's `.zshrc`.
 6. Offers to install the Meslo Nerd Font.
 
+After Oh My Posh is installed, the script checks whether its executable directory is available in the current `PATH`. If not, it adds an idempotent `export PATH=...` entry to the user-managed `~/.zshrc.local`, so future Zsh sessions can find Oh My Posh without changing the shared `.zshrc`.
+
 Set `SHELL_CONFIG_DIR` before running the script to use a different checkout directory. Restart the terminal afterward, or run `exec zsh`.
 
 On an HPC system, the script asks about `sudo` before installing anything. It first checks for `curl`, `git`, `unzip`, and `zsh`. If `sudo` is unavailable and only `zsh` is missing, it can build ncurses and zsh locally under `~/.local` (or `$SHELL_CONFIG_PREFIX`) without changing system files. The script checks for a compiler and `make`; load those through your cluster's modules first if needed. The final summary reports the resulting `zsh` executable path. Other missing tools must be provided by the cluster or installed by an administrator.
