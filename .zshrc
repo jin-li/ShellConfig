@@ -2,6 +2,8 @@
 [[ -f $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
 
 # Oh My Zsh is optional. When present, it manages the two plugins below.
+# zsh-autosuggestions highlight style: ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#9399b2"
 if [[ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
   export ZSH="$HOME/.oh-my-zsh"
   plugins=(zsh-autosuggestions fast-syntax-highlighting)
