@@ -13,9 +13,10 @@ else
     source "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
 
-# Make filename and command completion case-insensitive while preserving the
-# spelling entered by the user.
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# Make filename and command completion case-insensitive, and allow a typed
+# fragment to match anywhere in a candidate (for example, `cd dev<Tab>` can
+# complete `itrip-dev-doc`).
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|?=**'
 
 # Keep a numbered directory history available through `cd -<number>`.
 setopt AUTO_PUSHD

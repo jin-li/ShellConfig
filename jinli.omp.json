@@ -156,14 +156,6 @@
           "type": "path"
         },
         {
-          "background": "p:peach",
-          "foreground": "p:segment-text",
-          "powerline_symbol": "\ue0b0",
-          "style": "powerline",
-          "template": " \ue718 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
-          "type": "node"
-        },
-        {
           "background": "p:green",
           "background_templates": [
             "{{ if or (.Working.Changed) (.Staging.Changed) }}p:peach{{ end }}",
@@ -199,7 +191,7 @@
             "always_enabled": true
           },
           "style": "powerline",
-          "template": "{{ if eq .Code 0 }}{{ else }} {{ reason .Code }}{{ end }}",
+          "template": "{{ if eq .Code 0 }}{{ else }}{{ reason .Code }}{{ end }}",
           "type": "status"
         },
         {
@@ -219,6 +211,15 @@
           "style": "powerline",
           "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} ",
           "type": "python"
+        },
+        {
+          "background": "p:teal",
+          "foreground": "p:segment-text",
+          "invert_powerline": true,
+          "powerline_symbol": "\ue0b2",
+          "style": "powerline",
+          "template": " \ue718 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
+          "type": "node"
         },
         {
           "background": "p:lavender",
