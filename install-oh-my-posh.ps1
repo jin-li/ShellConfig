@@ -20,6 +20,7 @@ function Find-OhMyPosh {
         (Join-Path $env:LOCALAPPDATA 'Programs\oh-my-posh\bin\oh-my-posh.exe'),
         (Join-Path $env:LOCALAPPDATA 'Programs\oh-my-posh\oh-my-posh.exe'),
         (Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Links\oh-my-posh.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Microsoft\WindowsApps\oh-my-posh.exe'),
         (Join-Path $env:ProgramFiles 'oh-my-posh\bin\oh-my-posh.exe'),
         (Join-Path $env:ProgramFiles 'oh-my-posh\oh-my-posh.exe')
     )
@@ -31,12 +32,9 @@ function Find-OhMyPosh {
 
     $packageRoot = Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Packages'
     if (Test-Path $packageRoot) {
-        $packageExecutable = Get-ChildItem -Path (Join-Path $packageRoot 'JanDeDobbeleer.OhMyPosh*') `
-            -Filter 'oh-my-posh.exe' -File -Recurse -ErrorAction SilentlyContinue |
+        $packageExecutable = Get-ChildItem -Path $packageRoot -Filter 'oh-my-posh.exe' -File -Recurse -ErrorAction SilentlyContinue |
             Select-Object -First 1
-        if ($packageExecutable) {
-            return $packageExecutable.FullName
-        }
+        if ($packageExecutable) { return $packageExecutable.FullName }
     }
     return $null
 }
@@ -60,11 +58,14 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     throw 'WinGet is required. Install App Installer from the Microsoft Store and rerun this script.'
 }
 
-if (Find-OhMyPosh) {
+$OhMyPoshExe = Find-OhMyPosh
+if ($OhMyPoshExe) {
     Write-Host 'Oh My Posh is already installed; skipping installation.'
 } else {
-    winget install JanDeDobbeleer.OhMyPosh --source winget --accept-package-agreements --accept-source-agreements
+    Write-Host 'Oh My Posh was not found. Installing or repairing it with WinGet...'
+    winget install --id JanDeDobbeleer.OhMyPosh --exact --source winget --force --accept-package-agreements --accept-source-agreements
     Refresh-UserPath
+    $OhMyPoshExe = Find-OhMyPosh
 }
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
@@ -87,13 +88,13 @@ if (-not (Test-Path $ThemeSource -PathType Leaf)) {
     throw "Theme file not found: $ThemeSource"
 }
 
-$OhMyPoshExe = Find-OhMyPosh
 if (-not $OhMyPoshExe) {
     Refresh-UserPath
     $OhMyPoshExe = Find-OhMyPosh
 }
 if (-not $OhMyPoshExe) {
-    throw 'Oh My Posh was installed but is not available on PATH. Restart PowerShell and rerun this script.'
+    $wingetStatus = winget list --id JanDeDobbeleer.OhMyPosh --exact 2>&1 | Out-String
+    throw "Could not locate the Oh My Posh executable after WinGet installation/repair. WinGet status:`n$wingetStatus`nTry opening a new PowerShell window and rerunning this script."
 }
 $OhMyPoshBin = Split-Path -Parent $OhMyPoshExe
 
