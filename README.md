@@ -110,11 +110,11 @@ Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/inst
 .\install-oh-my-posh.ps1
 ```
 
-The PowerShell installer uses WinGet to install Oh My Posh (and Git if needed), clones the repository into `Documents\GitHub\ShellConfig`, links the same Jinli theme, backs up the existing PowerShell profile, adds the prompt initialization, and offers to install Meslo. Creating symbolic links may require Windows Developer Mode or an elevated PowerShell session.
+The PowerShell installer uses WinGet to install Oh My Posh (and Git if needed), skipping tools that are already available. It clones the repository into `Documents\GitHub\ShellConfig`, backs up the existing PowerShell profile, adds the prompt initialization, and checks for Meslo before offering to install it. It attempts to create a symbolic link for the theme; if Windows denies link creation, it safely falls back to a theme copy. Developer Mode or elevation enables the symbolic-link behavior.
 
 After installation, select **MesloLGM Nerd Font** in the terminal profile. For WSL, run the Linux installer inside WSL but install/configure the font on Windows.
 
-The PowerShell profile is normally stored at `$PROFILE` (for example, `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`). The theme link is `~\.config\oh-my-posh\jinli.omp.json`; the repository is `Documents\GitHub\ShellConfig`.
+The PowerShell profile is normally stored at `$PROFILE` (for example, `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`). The theme is at `~\.config\oh-my-posh\jinli.omp.json` (a symbolic link when permitted, otherwise a managed copy); the repository is `Documents\GitHub\ShellConfig`.
 
 ## Neovim configuration
 
