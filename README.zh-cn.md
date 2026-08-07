@@ -110,11 +110,11 @@ Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/inst
 .\install-oh-my-posh.ps1
 ```
 
-PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），已经存在的工具会跳过安装；脚本将仓库克隆到 `Documents\GitHub\ShellConfig`，备份已有 PowerShell Profile，添加提示符初始化命令，并在 Meslo 字体已经存在时跳过安装。脚本会尝试创建主题符号链接；如果 Windows 拒绝创建，则安全地回退为主题文件副本。开启 Windows 开发者模式或使用管理员 PowerShell 可以创建符号链接。
+PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），已经存在的工具会跳过安装；脚本将仓库克隆到 `Documents\GitHub\ShellConfig`，备份已有 PowerShell Profile，并创建一个新的 Profile，其中包含 Oh My Posh 可执行文件路径和提示符初始化命令。如果 Meslo 字体已经存在，也会跳过安装。
 
 安装后，请在终端配置中选择 **MesloLGM Nerd Font**。如果使用 WSL，请在 WSL 内运行 Linux 脚本，但字体需要安装并配置在 Windows 宿主系统中。
 
-PowerShell 配置文件通常位于 `$PROFILE`（例如 `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`）。主题位于 `~\.config\oh-my-posh\jinli.omp.json`（允许时为符号链接，否则为脚本管理的副本），仓库位于 `Documents\GitHub\ShellConfig`。
+PowerShell 配置文件通常位于 `$PROFILE`（例如 `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`）。Windows 会直接使用 `Documents\GitHub\ShellConfig\jinli.omp.json`，不会创建 `~\.config` 下的主题链接。新 Profile 会先将 Oh My Posh 的安装目录加入 `$env:Path`，再初始化主题。
 
 ## Neovim 配置
 
