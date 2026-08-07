@@ -229,7 +229,7 @@
             "always_enabled": true
           },
           "style": "powerline",
-          "template": " {{ .FormattedMs }} ",
+          "template": "{{ .FormattedMs }}",
           "type": "executiontime"
         },
         {
@@ -240,9 +240,19 @@
           "options": {
             "time_format": "15:04:05"
           },
-          "style": "{{ if .Segments.Contains \"Battery\" }}powerline{{ else }}diamond{{ end }}",
+          "style": "powerline",
+          "template": "{{ if .Segments.Contains \"Battery\" }}{{ .CurrentDate | date .Format }}{{ end }}",
+          "type": "time"
+        },
+        {
+          "background": "p:sapphire",
+          "foreground": "p:segment-text",
+          "options": {
+            "time_format": "15:04:05"
+          },
+          "style": "diamond",
           "trailing_diamond": "\ue0b4",
-          "template": " {{ .CurrentDate | date .Format }} ",
+          "template": "{{ if not (.Segments.Contains \"Battery\") }}{{ .CurrentDate | date .Format }}{{ end }}",
           "type": "time"
         },
         {
