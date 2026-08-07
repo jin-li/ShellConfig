@@ -240,7 +240,8 @@
           "options": {
             "time_format": "15:04:05"
           },
-          "style": "powerline",
+          "style": "{{ if .Segments.Contains \"Battery\" }}powerline{{ else }}diamond{{ end }}",
+          "trailing_diamond": "\ue0b4",
           "template": " {{ .CurrentDate | date .Format }} ",
           "type": "time"
         },
