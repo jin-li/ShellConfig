@@ -10,6 +10,37 @@ function Refresh-UserPath {
     $env:Path = "$machinePath;$userPath"
 }
 
+function Find-OhMyPosh {
+    $command = Get-Command oh-my-posh -ErrorAction SilentlyContinue
+    if ($command) {
+        return $command.Source
+    }
+
+    $candidates = @(
+        (Join-Path $env:LOCALAPPDATA 'Programs\oh-my-posh\bin\oh-my-posh.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Programs\oh-my-posh\oh-my-posh.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Links\oh-my-posh.exe'),
+        (Join-Path $env:ProgramFiles 'oh-my-posh\bin\oh-my-posh.exe'),
+        (Join-Path $env:ProgramFiles 'oh-my-posh\oh-my-posh.exe')
+    )
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+            return $candidate
+        }
+    }
+
+    $packageRoot = Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Packages'
+    if (Test-Path $packageRoot) {
+        $packageExecutable = Get-ChildItem -Path (Join-Path $packageRoot 'JanDeDobbeleer.OhMyPosh*') `
+            -Filter 'oh-my-posh.exe' -File -Recurse -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+        if ($packageExecutable) {
+            return $packageExecutable.FullName
+        }
+    }
+    return $null
+}
+
 function Test-MesloFont {
     $fontRoots = @(
         (Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'),
@@ -29,7 +60,7 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     throw 'WinGet is required. Install App Installer from the Microsoft Store and rerun this script.'
 }
 
-if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+if (Find-OhMyPosh) {
     Write-Host 'Oh My Posh is already installed; skipping installation.'
 } else {
     winget install JanDeDobbeleer.OhMyPosh --source winget --accept-package-agreements --accept-source-agreements
@@ -56,15 +87,15 @@ if (-not (Test-Path $ThemeSource -PathType Leaf)) {
     throw "Theme file not found: $ThemeSource"
 }
 
-$OhMyPoshCommand = Get-Command oh-my-posh -ErrorAction SilentlyContinue
-if (-not $OhMyPoshCommand) {
+$OhMyPoshExe = Find-OhMyPosh
+if (-not $OhMyPoshExe) {
     Refresh-UserPath
-    $OhMyPoshCommand = Get-Command oh-my-posh -ErrorAction SilentlyContinue
+    $OhMyPoshExe = Find-OhMyPosh
 }
-if (-not $OhMyPoshCommand) {
+if (-not $OhMyPoshExe) {
     throw 'Oh My Posh was installed but is not available on PATH. Restart PowerShell and rerun this script.'
 }
-$OhMyPoshBin = Split-Path -Parent $OhMyPoshCommand.Source
+$OhMyPoshBin = Split-Path -Parent $OhMyPoshExe
 
 $ProfileDir = Split-Path $PROFILE
 New-Item -ItemType Directory -Force -Path $ProfileDir | Out-Null
@@ -89,7 +120,7 @@ if (Test-MesloFont) {
 } else {
     $InstallFont = Read-Host 'Install the Meslo Nerd Font used by the Jinli theme? [y/N]'
     if ($InstallFont -match '^(y|yes)$') {
-        oh-my-posh font install meslo
+        & $OhMyPoshExe font install meslo
         $FontMode = 'installed'
         Write-Host 'Configure Windows Terminal to use "MesloLGM Nerd Font".'
     } else {
