@@ -141,7 +141,7 @@
           "foreground": "p:segment-text",
           "powerline_symbol": "\ue0b0",
           "style": "powerline",
-          "template": "{{ if .SSHSession }}\ueb39 {{ .UserName }}@{{ .HostName }}{{ end }}",
+          "template": "{{ if .SSHSession }} \ueb39 {{ .UserName }}@{{ .HostName }}{{ end }}",
           "type": "session"
         },
         {
@@ -152,7 +152,17 @@
             "style": "full"
           },
           "style": "powerline",
-          "template": " {{ if eq .Location .Env.HOME }}\udb84\udcb5 {{ else if not .Writable }}\udb80\ude50 {{ else if glob \".github\" }}\ue5fd {{ else if glob \".git\" }}\ue5fb {{ else if glob \"package.json\" }}\ue5fa {{ else if matchP \"(?i)(^|/)downloads$\" .Location }}\udb80\ude4d {{ else if matchP \"(?i)(^|/)(pictures|images)$\" .Location }}\udb80\ude4f {{ else }}\uf07c {{ end }}{{ .Path }} ",
+          "templates": [
+            "{{ if eq .Location .Env.HOME }} \udb84\udcb5 {{ .Path }} {{ end }}",
+            "{{ if not .Writable }} \udb80\ude50 {{ .Path }} {{ end }}",
+            "{{ if glob \".github\" }} \ue5fd {{ .Path }} {{ end }}",
+            "{{ if glob \".git\" }} \ue5fb {{ .Path }} {{ end }}",
+            "{{ if glob \"package.json\" }} \ue5fa {{ .Path }} {{ end }}",
+            "{{ if matchP \"(?i)(^|/)downloads$\" .Location }} \udb80\ude4d {{ .Path }} {{ end }}",
+            "{{ if matchP \"(?i)(^|/)(pictures|images)$\" .Location }} \udb80\ude4f {{ .Path }} {{ end }}",
+            " \uf07c {{ .Path }} "
+          ],
+          "templates_logic": "first_match",
           "type": "path"
         },
         {
