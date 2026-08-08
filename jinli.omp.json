@@ -152,7 +152,7 @@
             "style": "full"
           },
           "style": "powerline",
-          "template": " {{ .Path }} ",
+          "template": " {{ if eq .Location .Env.HOME }}\udb84\udcb5 {{ else if not .Writable }}\udb80\ude50 {{ else if glob \".github\" }}\ue5fd {{ else if glob \".git\" }}\ue5fb {{ else if glob \"package.json\" }}\ue5fa {{ else if matchP \"(?i)(^|/)downloads$\" .Location }}\udb80\ude4d {{ else if matchP \"(?i)(^|/)(pictures|images)$\" .Location }}\udb80\ude4f {{ else }}\uf07c {{ end }}{{ .Path }} ",
           "type": "path"
         },
         {
