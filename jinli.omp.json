@@ -141,7 +141,7 @@
           "foreground": "p:segment-text",
           "powerline_symbol": "\ue0b0",
           "style": "powerline",
-          "template": "{{ if .SSHSession }}{{ .UserName }}@{{ .HostName }}{{ end }}",
+          "template": "{{ if .SSHSession }}\ueb39 {{ .UserName }}@{{ .HostName }}{{ end }}",
           "type": "session"
         },
         {
