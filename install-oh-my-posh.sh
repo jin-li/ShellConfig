@@ -231,7 +231,8 @@ link_configs() {
       mv "$HOME/.zshrc" "$backup"
       printf 'Previous .zshrc moved to %s\n' "$backup"
     else
-      return
+      printf 'Zsh configuration is already linked at %s\n' "$HOME/.zshrc"
+      return 0
     fi
   fi
   ln -s "$REPO_DIR/.zshrc" "$HOME/.zshrc"
