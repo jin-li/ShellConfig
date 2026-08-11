@@ -11,7 +11,7 @@
 - Zsh 插件：[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) 和 [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
 - Oh My Zsh 为可选组件。如果已经安装，脚本会把插件安装到它的自定义插件目录；否则插件会安装到 `~/.local/share/zsh/plugins`，脚本不会额外安装 Oh My Zsh。
 
-仓库中的 `.zshrc` 不强制依赖 Homebrew、Oh My Zsh 或 Neovim，仅在对应程序存在时启用相关配置。
+仓库中的 `.zshrc.common` 不强制依赖 Homebrew、Oh My Zsh 或 Neovim，仅在对应程序存在时启用相关配置。
 
 Zsh 补全不区分大小写。例如，输入 `cat rea` 后按 Tab 可以补全为
 `README.md`。
@@ -22,7 +22,13 @@ Zsh 还会维护目录栈：`AUTO_PUSHD` 会记录通过 `cd` 访问过的目录
 
 ### 本地 Zsh 配置
 
-共享的 `.zshrc` 会在文件存在时优先加载 `~/.zshrc.local`。请将机器专属配置放在那里，例如私有环境变量、仅工作站使用的别名、集群 module 设置和本地工具路径；可移植的公共配置则保留在本仓库中。安装脚本不会管理或创建这个文件的软链接。
+仓库中的 `.zshrc.common` 保存稳定的共享配置。安装脚本会创建普通文件
+`~/.zshrc` 并加载 `.zshrc.common`，之后保留 `~/.zshrc` 供用户和其他工具
+管理。这样 Conda、OpenClaw 等工具向 `~/.zshrc` 追加初始化配置时，不会修改
+仓库中的共享文件。
+
+请将机器专属配置、私有环境变量、别名、集群 module 设置和本地工具路径写入
+`~/.zshrc`。已有的 `~/.zshrc.local` 会继续被加载，以兼容旧版本安装。
 
 例如：
 
@@ -31,13 +37,13 @@ export PATH="$HOME/.local/bin:$PATH"
 alias connect-hpc='ssh user@example.org'
 ```
 
-安装后，共享配置为 `~/.zshrc` → 仓库中的 `.zshrc`；可选的本地配置文件为 `~/.zshrc.local`。
+安装后，`~/.zshrc` 是本地配置文件，并加载仓库中的 `.zshrc.common`。
 
 ### NixOS
 
 本仓库也通过 Flake 提供 NixOS 模块。该模块会以声明式方式安装 Zsh、Oh
-My Posh、Zsh 插件和 Meslo Nerd Font，并导入共享的 `.zshrc` 与
-`jinli.omp.json`。模块会将共享 `.zshrc` 中安装脚本使用的路径适配为
+My Posh、Zsh 插件和 Meslo Nerd Font，并导入共享的 `.zshrc.common` 与
+`jinli.omp.json`。模块会将共享 `.zshrc.common` 中安装脚本使用的路径适配为
 NixOS 的软件包路径和 `/etc` 路径。
 
 将本仓库添加为 Flake 输入：
@@ -64,8 +70,8 @@ sudo nixos-rebuild switch --flake .#<host>
 exec zsh
 ```
 
-该模块不会管理 `~/.zshrc.local`；请使用该文件保存私有的机器专属环境
-变量和别名。为了正确显示主题图标，请在终端模拟器中选择
+该模块不会管理用户的 `~/.zshrc`；请使用该文件保存私有的机器专属环境变量、
+别名和工具初始化配置。为了正确显示主题图标，请在终端模拟器中选择
 **MesloLGM Nerd Font**。
 
 ### macOS 和 Linux
@@ -80,25 +86,39 @@ chmod +x install-oh-my-posh.sh
 ./install-oh-my-posh.sh
 ```
 
+安装时脚本会询问仓库目录。直接按 Enter 使用默认的
+`~/Documents/GitHub/ShellConfig`，也可以输入其他目录。如果设置了
+`SHELL_CONFIG_DIR`，它会作为建议的安装目录。
+
 脚本会：
 
 1. 安装 Zsh 依赖和 Oh My Posh；
 2. 将本仓库克隆或更新到 `~/Documents/GitHub/ShellConfig`；
 3. 根据是否存在 Oh My Zsh，以相应方式安装两个 Zsh 插件；
 4. 将主题链接到 `~/.config/oh-my-posh/jinli.omp.json`；
-5. 将已有的 `~/.zshrc` 移动为 `~/.zshrc-pre-oh-my-posh-jinli`（重名时添加时间戳），然后链接仓库中的 `.zshrc`；
+5. 将已有的 `~/.zshrc` 移动为 `~/.zshrc-pre-oh-my-posh-jinli`（重名时添加时间戳），然后创建加载仓库 `.zshrc.common` 的本地 `~/.zshrc`；
 6. 询问是否安装 Meslo Nerd Font。
 
-安装 Oh My Posh 后，脚本会检查其可执行文件目录是否在当前 `PATH` 中。如果不在，就会向用户管理的 `~/.zshrc.local` 添加幂等的 `export PATH=...` 配置，确保之后的 Zsh 会话能够找到 Oh My Posh，同时不会修改共享的 `.zshrc`。
+安装 Oh My Posh 后，脚本会检查其可执行文件目录是否在当前 `PATH` 中。如果不在，就会向用户管理的 `~/.zshrc` 添加幂等的 `export PATH=...` 配置，确保之后的 Zsh 会话能够找到 Oh My Posh，同时不会修改共享的 `.zshrc.common`。
 
 如需更改仓库目录，可在运行前设置 `SHELL_CONFIG_DIR`。完成后重启终端，或运行 `exec zsh`。
+
+已有的 macOS/Linux 安装可以运行以下脚本，更新仓库、主题链接和本地配置：
+
+```sh
+cd /path/to/ShellConfig
+./update.sh
+```
+
+更新脚本以自身所在目录作为仓库位置，会保留本地 `~/.zshrc`，并继续加载旧版的 `~/.zshrc.local` 配置。
 
 在 HPC 集群上，脚本会先询问是否拥有 `sudo` 权限，然后检查 `curl`、`git`、`unzip` 和 `zsh`。如果没有 `sudo` 且只有 `zsh` 缺失，脚本可以在用户目录 `~/.local`（或 `$SHELL_CONFIG_PREFIX`）下自行编译 ncurses 和 zsh，不会修改系统文件。脚本需要编译器和 `make`；如有需要，请先通过集群的 module 加载它们。安装结束时会显示实际的 `zsh` 路径。其他缺失的工具需要通过集群环境或管理员提供。
 
 安装后的相关文件位置：
 
 - 仓库：`~/Documents/GitHub/ShellConfig`（或 `$SHELL_CONFIG_DIR`）
-- Zsh 配置：`~/.zshrc` → 仓库中的 `.zshrc`
+- 公共 Zsh 配置：仓库中的 `.zshrc.common`
+- 本地 Zsh 配置：`~/.zshrc`（加载 `.zshrc.common`）
 - Oh My Posh 主题：`~/.config/oh-my-posh/jinli.omp.json` → 仓库中的 `jinli.omp.json`
 - 独立 Zsh 插件：`~/.local/share/zsh/plugins`（如果已有 Oh My Zsh，则位于其自定义插件目录）
 
@@ -112,7 +132,7 @@ Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/inst
 .\install-oh-my-posh.ps1
 ```
 
-PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），已经存在的工具会跳过安装；脚本将仓库克隆到 `Documents\GitHub\ShellConfig`，备份已有 PowerShell Profile，并创建一个新的 Profile，其中包含 Oh My Posh 可执行文件路径和提示符初始化命令。如果 Meslo 字体已经存在，也会跳过安装。
+PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），已经存在的工具会跳过安装；脚本会询问仓库目录并在该目录中克隆或更新仓库，保留 PowerShell Profile 中用户和工具的配置，只更新由 ShellConfig 管理的 Oh My Posh 区块。如果 Meslo 字体已经存在，也会跳过安装。
 
 安装后，请在终端配置中选择 **MesloLGM Nerd Font**。如果使用 WSL，请在 WSL 内运行 Linux 脚本，但字体需要安装并配置在 Windows 宿主系统中。
 

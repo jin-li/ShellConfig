@@ -11,7 +11,7 @@ Shared shell and Neovim configuration for macOS, Linux, and Windows.
 - Zsh plugins: [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) and [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
 - Oh My Zsh is optional. If it is already installed, the installer puts the plugins in its custom plugin directory. Otherwise, it installs the plugins under `~/.local/share/zsh/plugins` and does not install Oh My Zsh.
 
-The supplied `.zshrc` does not require Homebrew, Oh My Zsh, or Neovim. It enables each optional integration only when it is available.
+The supplied `.zshrc.common` does not require Homebrew, Oh My Zsh, or Neovim. It enables each optional integration only when it is available.
 
 Zsh completion is case-insensitive. For example, `cat rea` followed by Tab can
 complete to `README.md`.
@@ -24,8 +24,8 @@ select a numbered previous directory, or inspect the stack with `dirs -v`.
 
 This repository also exposes a NixOS module through its flake. The module
 installs Zsh, Oh My Posh, the Zsh plugins, and Meslo Nerd Font, and imports the
-shared `.zshrc` and `jinli.omp.json` declaratively. It adapts the installer
-paths used by the shared `.zshrc` to NixOS package and `/etc` paths.
+shared `.zshrc.common` and `jinli.omp.json` declaratively. It adapts the installer
+paths used by the shared `.zshrc.common` to NixOS package and `/etc` paths.
 
 Add the repository as a flake input:
 
@@ -51,13 +51,21 @@ sudo nixos-rebuild switch --flake .#<host>
 exec zsh
 ```
 
-The module does not manage `~/.zshrc.local`; use that file for private,
-machine-specific environment variables and aliases. Configure the terminal
-emulator to use **MesloLGM Nerd Font** for the theme icons.
+The module does not manage the user's `~/.zshrc`; use that file for private,
+machine-specific environment variables, aliases, and tool initialization.
+Configure the terminal emulator to use **MesloLGM Nerd Font** for the theme
+icons.
 
 ### Local Zsh configuration
 
-The shared `.zshrc` sources `~/.zshrc.local` first when that file exists. Keep machine-specific settings there—private environment variables, workstation-only aliases, cluster module setup, and local tool paths—while keeping portable configuration in this repository. `~/.zshrc.local` is intentionally not managed or symlinked by the installer.
+The repository's `.zshrc.common` contains the stable shared configuration. The
+installer creates a regular `~/.zshrc` that sources `.zshrc.common`, then leaves
+the rest of `~/.zshrc` user-managed. This allows tools such as Conda and OpenClaw
+to append their initialization without modifying the shared repository file.
+
+Keep machine-specific settings—private environment variables, workstation-only
+aliases, cluster module setup, and local tool paths—in `~/.zshrc`. Existing
+`~/.zshrc.local` files are sourced for backward compatibility.
 
 For example:
 
@@ -66,7 +74,8 @@ export PATH="$HOME/.local/bin:$PATH"
 alias connect-hpc='ssh user@example.org'
 ```
 
-After installation, the shared configuration is `~/.zshrc` → repository `.zshrc`; the optional local configuration is `~/.zshrc.local`.
+After installation, `~/.zshrc` is a local file that sources the repository's
+`.zshrc.common`.
 
 ### macOS and Linux
 
@@ -80,25 +89,41 @@ chmod +x install-oh-my-posh.sh
 ./install-oh-my-posh.sh
 ```
 
+The installer asks where to clone the repository. Press Enter to accept
+`~/Documents/GitHub/ShellConfig`, or enter another directory. `SHELL_CONFIG_DIR`
+is used as the suggested destination when it is set.
+
 The installer:
 
 1. Installs Zsh dependencies and Oh My Posh.
 2. Clones or updates this repository at `~/Documents/GitHub/ShellConfig`.
 3. Installs the Zsh plugins, with or without Oh My Zsh.
 4. Links `jinli.omp.json` to `~/.config/oh-my-posh/jinli.omp.json`.
-5. Moves an existing `~/.zshrc` to `~/.zshrc-pre-oh-my-posh-jinli` (adding a timestamp if necessary), then links this repository's `.zshrc`.
+5. Moves an existing `~/.zshrc` to `~/.zshrc-pre-oh-my-posh-jinli` (adding a timestamp if necessary), then creates a local `~/.zshrc` that sources this repository's `.zshrc.common`.
 6. Offers to install the Meslo Nerd Font.
 
-After Oh My Posh is installed, the script checks whether its executable directory is available in the current `PATH`. If not, it adds an idempotent `export PATH=...` entry to the user-managed `~/.zshrc.local`, so future Zsh sessions can find Oh My Posh without changing the shared `.zshrc`.
+After Oh My Posh is installed, the script checks whether its executable directory is available in the current `PATH`. If not, it adds an idempotent `export PATH=...` entry to the user-managed `~/.zshrc`, so future Zsh sessions can find Oh My Posh without changing the shared `.zshrc.common`.
 
 Set `SHELL_CONFIG_DIR` before running the script to use a different checkout directory. Restart the terminal afterward, or run `exec zsh`.
+
+Existing macOS/Linux installations can update the repository, theme link, and
+local configuration with:
+
+```sh
+cd /path/to/ShellConfig
+./update.sh
+```
+
+The update script uses its own directory as the repository location, preserves the local `~/.zshrc`, and keeps legacy
+`~/.zshrc.local` settings available.
 
 On an HPC system, the script asks about `sudo` before installing anything. It first checks for `curl`, `git`, `unzip`, and `zsh`. If `sudo` is unavailable and only `zsh` is missing, it can build ncurses and zsh locally under `~/.local` (or `$SHELL_CONFIG_PREFIX`) without changing system files. The script checks for a compiler and `make`; load those through your cluster's modules first if needed. The final summary reports the resulting `zsh` executable path. Other missing tools must be provided by the cluster or installed by an administrator.
 
 After installation, the relevant files are located at:
 
 - Repository: `~/Documents/GitHub/ShellConfig` (or `$SHELL_CONFIG_DIR`)
-- Zsh configuration: `~/.zshrc` → repository `.zshrc`
+- Common Zsh configuration: repository `.zshrc.common`
+- Local Zsh configuration: `~/.zshrc` (sources `.zshrc.common`)
 - Oh My Posh theme: `~/.config/oh-my-posh/jinli.omp.json` → repository `jinli.omp.json`
 - Standalone Zsh plugins: `~/.local/share/zsh/plugins` (or the Oh My Zsh custom plugin directory when Oh My Zsh exists)
 
@@ -112,7 +137,7 @@ Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/inst
 .\install-oh-my-posh.ps1
 ```
 
-The PowerShell installer uses WinGet to install Oh My Posh (and Git if needed), skipping tools that are already available. It clones the repository into `Documents\GitHub\ShellConfig`, backs up the existing PowerShell profile, and creates a fresh profile containing the Oh My Posh executable path and initialization command. It checks for Meslo before offering to install it.
+The PowerShell installer uses WinGet to install Oh My Posh (and Git if needed), skipping tools that are already available. It asks where to clone or update the repository, preserves user and tool configuration in the PowerShell profile, and updates only its managed Oh My Posh section. It checks for Meslo before offering to install it.
 
 After installation, select **MesloLGM Nerd Font** in the terminal profile. For WSL, run the Linux installer inside WSL but install/configure the font on Windows.
 

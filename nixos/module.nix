@@ -1,7 +1,7 @@
 sourcePath: { config, lib, pkgs, ... }:
 
 let
-  # The shared .zshrc expects the non-NixOS installer paths. Adapt only those
+  # The shared .zshrc.common expects the non-NixOS installer paths. Adapt only those
   # paths; keep the rest of the cross-platform configuration shared upstream.
   shellConfigZshrc = builtins.replaceStrings
     [
@@ -14,7 +14,7 @@ let
       "\"${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh\""
       "\"${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh\""
     ]
-    (builtins.readFile (sourcePath + "/.zshrc"));
+    (builtins.readFile (sourcePath + "/.zshrc.common"));
 in
 {
   options.programs.shellConfig.enable = lib.mkEnableOption
