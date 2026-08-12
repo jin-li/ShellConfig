@@ -1,84 +1,39 @@
-语言：🇨🇳 | [🇺🇸](./README.md)
+语言：中文🇨🇳 | Language [English 🇺🇸](./README.md)
 
 # ShellConfig
 
-适用于 macOS、Linux 和 Windows 的 Shell 与 Neovim 共享配置。
+> 面向 macOS、Linux、Windows 和 NixOS 的精致、便携式 Shell 环境。
 
-## Shell 配置
+![Jinli Oh My Posh 主题演示](./jinli-omp-demo.png)
 
-- 提示符：[Oh My Posh](https://ohmyposh.dev/)，使用锦鲤主题 [`jinli.omp.json`](./jinli.omp.json)
-- Shell：macOS/Linux 使用 Zsh，Windows 使用 PowerShell
-- Zsh 插件：[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) 和 [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
-- Oh My Zsh 为可选组件。如果已经安装，脚本会把插件安装到它的自定义插件目录；否则插件会安装到 `~/.local/share/zsh/plugins`，脚本不会额外安装 Oh My Zsh。
+ShellConfig 将精心设计的 [Oh My Posh](https://ohmyposh.dev/) 提示符、实用的
+Zsh 默认配置、可选插件和独立的 LazyVim 配置组合在一起。应该共享的配置会
+保持共享；机器和工具需要定制的部分则保留在本地。
 
-仓库中的 `.zshrc.common` 不强制依赖 Homebrew、Oh My Zsh 或 Neovim，仅在对应程序存在时启用相关配置。
+## Jinli 主题的亮点
 
-Zsh 补全不区分大小写。例如，输入 `cat rea` 后按 Tab 可以补全为
-`README.md`。
+锦鲤主题 [`jinli.omp.json`](./jinli.omp.json) 让有用的信息始终可见，同时
+避免提示符过于拥挤：
 
-Zsh 还会维护目录栈：`AUTO_PUSHD` 会记录通过 `cd` 访问过的目录，
-`PUSHD_IGNORE_DUPS` 会避免重复条目。可以使用 `cd -<数字>` 选择编号的
-历史目录，或使用 `dirs -v` 查看目录栈。
+| 功能 | 展示内容 |
+| --- | --- |
+| **上下文感知路径** | 家目录、锁定目录、GitHub、Git、npm、Downloads、Pictures 和普通目录使用不同图标。 |
+| **Git 状态一目了然** | 仓库名、分支、工作区状态和变更数量。 |
+| **语言环境信息** | 仅在当前项目相关时显示 Python 和 Node 版本。 |
+| **远程会话识别** | SSH 会话带有远程图标，方便区分本地和远程 Shell。 |
+| **自适应提示符** | 电池、时间、命令耗时和退出状态会根据环境动态调整，并保持右对齐。 |
+| **跨平台设计** | macOS/Linux 使用 Zsh，Windows 使用 PowerShell，并支持声明式 NixOS 配置。 |
 
-### 本地 Zsh 配置
+上面的截图还展示了该主题与仓库中可选的系统信息显示配合使用的效果。
 
-仓库中的 `.zshrc.common` 保存稳定的共享配置。安装脚本会创建普通文件
-`~/.zshrc` 并加载 `.zshrc.common`，之后保留 `~/.zshrc` 供用户和其他工具
-管理。这样 Conda、OpenClaw 等工具向 `~/.zshrc` 追加初始化配置时，不会修改
-仓库中的共享文件。
+## 安装
 
-请将机器专属配置、私有环境变量、别名、集群 module 设置和本地工具路径写入
-`~/.zshrc`。已有的 `~/.zshrc.local` 会继续被加载，以兼容旧版本安装。
+请选择对应平台的安装方式。请以普通用户运行脚本；需要系统软件包时，脚本
+会在使用 `sudo` 前进行询问。
 
-例如：
+### macOS 或 Linux
 
-```zsh
-export PATH="$HOME/.local/bin:$PATH"
-alias connect-hpc='ssh user@example.org'
-```
-
-安装后，`~/.zshrc` 是本地配置文件，并加载仓库中的 `.zshrc.common`。
-
-### NixOS
-
-本仓库也通过 Flake 提供 NixOS 模块。该模块会以声明式方式安装 Zsh、Oh
-My Posh、Zsh 插件和 Meslo Nerd Font，并导入共享的 `.zshrc.common` 与
-`jinli.omp.json`。模块会将共享 `.zshrc.common` 中安装脚本使用的路径适配为
-NixOS 的软件包路径和 `/etc` 路径。
-
-将本仓库添加为 Flake 输入：
-
-```nix
-inputs.shell-config.url = "github:jin-li/ShellConfig";
-```
-
-在 NixOS 配置中导入并启用模块：
-
-```nix
-modules = [
-  inputs.shell-config.nixosModules.default
-];
-
-programs.shellConfig.enable = true;
-users.users.<username>.shell = pkgs.zsh;
-```
-
-然后重建所选主机：
-
-```bash
-sudo nixos-rebuild switch --flake .#<host>
-exec zsh
-```
-
-该模块不会管理用户的 `~/.zshrc`；请使用该文件保存私有的机器专属环境变量、
-别名和工具初始化配置。为了正确显示主题图标，请在终端模拟器中选择
-**MesloLGM Nerd Font**。
-
-### macOS 和 Linux
-
-支持 Debian/Ubuntu、Fedora/RHEL、Arch 和 openSUSE 等主流 Linux 系列。macOS 请先安装 [Homebrew](https://brew.sh/)。
-
-请以普通用户运行，不要使用 `sudo` 启动脚本：
+macOS 请先安装 [Homebrew](https://brew.sh/)，然后运行：
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install-oh-my-posh.sh
@@ -86,45 +41,19 @@ chmod +x install-oh-my-posh.sh
 ./install-oh-my-posh.sh
 ```
 
-安装时脚本会询问仓库目录。直接按 Enter 使用默认的
-`~/Documents/GitHub/ShellConfig`，也可以输入其他目录。如果设置了
-`SHELL_CONFIG_DIR`，它会作为建议的安装目录。
+脚本会询问仓库目录。直接按 Enter 使用 `~/Documents/GitHub/ShellConfig`，也
+可以输入其他目录。安装完成后请重启终端，或运行 `exec zsh`。
 
-脚本会：
-
-1. 安装 Zsh 依赖和 Oh My Posh；
-2. 将本仓库克隆或更新到 `~/Documents/GitHub/ShellConfig`；
-3. 根据是否存在 Oh My Zsh，以相应方式安装两个 Zsh 插件；
-4. 将主题链接到 `~/.config/oh-my-posh/jinli.omp.json`；
-5. 将已有的 `~/.zshrc` 移动为 `~/.zshrc-pre-oh-my-posh-jinli`（重名时添加时间戳），然后创建加载仓库 `.zshrc.common` 的本地 `~/.zshrc`；
-6. 询问是否安装 Meslo Nerd Font。
-
-安装 Oh My Posh 后，脚本会检查其可执行文件目录是否在当前 `PATH` 中。如果不在，就会向用户管理的 `~/.zshrc` 添加幂等的 `export PATH=...` 配置，确保之后的 Zsh 会话能够找到 Oh My Posh，同时不会修改共享的 `.zshrc.common`。
-
-如需更改仓库目录，可在运行前设置 `SHELL_CONFIG_DIR`。完成后重启终端，或运行 `exec zsh`。
-
-已有的 macOS/Linux 安装可以运行以下脚本，更新仓库、主题链接和本地配置：
+更新已有安装时，请从仓库目录运行：
 
 ```sh
 cd /path/to/ShellConfig
 ./update.sh
 ```
 
-更新脚本以自身所在目录作为仓库位置，会保留本地 `~/.zshrc`，并继续加载旧版的 `~/.zshrc.local` 配置。
-
-在 HPC 集群上，脚本会先询问是否拥有 `sudo` 权限，然后检查 `curl`、`git`、`unzip` 和 `zsh`。如果没有 `sudo` 且只有 `zsh` 缺失，脚本可以在用户目录 `~/.local`（或 `$SHELL_CONFIG_PREFIX`）下自行编译 ncurses 和 zsh，不会修改系统文件。脚本需要编译器和 `make`；如有需要，请先通过集群的 module 加载它们。安装结束时会显示实际的 `zsh` 路径。其他缺失的工具需要通过集群环境或管理员提供。
-
-安装后的相关文件位置：
-
-- 仓库：`~/Documents/GitHub/ShellConfig`（或 `$SHELL_CONFIG_DIR`）
-- 公共 Zsh 配置：仓库中的 `.zshrc.common`
-- 本地 Zsh 配置：`~/.zshrc`（加载 `.zshrc.common`）
-- Oh My Posh 主题：`~/.config/oh-my-posh/jinli.omp.json` → 仓库中的 `jinli.omp.json`
-- 独立 Zsh 插件：`~/.local/share/zsh/plugins`（如果已有 Oh My Zsh，则位于其自定义插件目录）
-
 ### Windows PowerShell
 
-以普通用户打开 PowerShell 并运行：
+以普通用户打开 PowerShell：
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
@@ -132,17 +61,65 @@ Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/inst
 .\install-oh-my-posh.ps1
 ```
 
-PowerShell 脚本通过 WinGet 安装 Oh My Posh（必要时也安装 Git），已经存在的工具会跳过安装；脚本会询问仓库目录并在该目录中克隆或更新仓库，保留 PowerShell Profile 中用户和工具的配置，只更新由 ShellConfig 管理的 Oh My Posh 区块。如果 Meslo 字体已经存在，也会跳过安装。
+脚本在需要时通过 WinGet 安装 Oh My Posh 或 Git，询问仓库目录，并保留现有
+PowerShell Profile 内容。
 
-安装后，请在终端配置中选择 **MesloLGM Nerd Font**。如果使用 WSL，请在 WSL 内运行 Linux 脚本，但字体需要安装并配置在 Windows 宿主系统中。
+### NixOS
 
-PowerShell 配置文件通常位于 `$PROFILE`（例如 `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`）。Windows 会直接使用 `Documents\GitHub\ShellConfig\jinli.omp.json`，不会创建 `~\.config` 下的主题链接。新 Profile 会先将 Oh My Posh 的安装目录加入 `$env:Path`，再初始化主题。
+将仓库添加为 Flake 输入，导入模块并启用：
+
+```nix
+inputs.shell-config.url = "github:jin-li/ShellConfig";
+
+modules = [ inputs.shell-config.nixosModules.default ];
+programs.shellConfig.enable = true;
+users.users.<username>.shell = pkgs.zsh;
+```
+
+然后重建系统并启动新的 Zsh 会话：
+
+```bash
+sudo nixos-rebuild switch --flake .#<host>
+exec zsh
+```
+
+## 字体与终端设置
+
+请在终端配置中安装并选择 **MesloLGM Nerd Font**。主题图标依赖 Nerd Font；
+未配置该字体时，图标可能显示为方框。使用 WSL 时，请在 WSL 内运行 Linux
+安装脚本，但在 Windows 中安装字体。
+
+## Shell 配置
+
+共享 Shell 配置在 macOS/Linux 使用 Zsh，在 Windows 使用 PowerShell。Zsh 包含：
+
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
+- [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
+- 不区分大小写的补全，包括便捷的目录补全
+- 通过 `AUTO_PUSHD`、`PUSHD_IGNORE_DUPS`、`cd -<数字>` 和 `dirs -v` 管理目录栈
+
+Homebrew、Oh My Zsh 和 Neovim 都是可选的。`.zshrc.common` 只会在相关程序
+存在时启用对应集成。如果已有 Oh My Zsh，脚本会使用其自定义插件目录；否则
+插件会安装到 `~/.local/share/zsh/plugins`。
+
+## 共享与本地 Zsh 配置
+
+仓库中的 [`.zshrc.common`](./.zshrc.common) 是稳定的共享配置。安装脚本会
+创建普通文件 `~/.zshrc` 并加载它。机器专属设置和工具初始化应放在
+`~/.zshrc` 中，这样 Conda、OpenClaw 等工具可以追加自己的配置，而不会修改
+仓库中的共享文件。
+
+```zsh
+export PATH="$HOME/.local/bin:$PATH"
+alias connect-hpc='ssh user@example.org'
+```
+
+已有的 `~/.zshrc.local` 仍会被加载，以兼容旧版安装。原有 `~/.zshrc` 会被
+备份为 `~/.zshrc-pre-oh-my-posh-jinli`，重名时会自动添加时间戳。
 
 ## Neovim 配置
 
-LazyVim 与 Oh My Posh 保持为两个独立的安装步骤：Oh My Posh 配置 Shell 提示符，LazyVim 替换 Neovim 配置并下载编辑器插件。这样只使用提示符时不需要安装 Neovim，也不会在配置 Shell 时修改编辑器文件。
-
-当前 LazyVim starter 要求 Neovim 版本不低于 0.11.2。安装脚本不会卸载 Vim 或旧版 Neovim；如果版本过低会提示升级并退出。脚本会在克隆 starter 前备份已有的 Neovim 配置和数据：
+LazyVim 与 Shell 安装保持独立：
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_LazyVim.sh
@@ -150,14 +127,32 @@ chmod +x install_LazyVim.sh
 ./install_LazyVim.sh
 ```
 
-在 HPC 上，此脚本同样会先询问 `sudo` 并检查 `git` 和 `nvim`。未经确认不会执行特权安装。如果没有 `sudo` 且缺少依赖，请通过集群 module 加载，或先在用户目录安装后再重新运行。
+当前 LazyVim starter 要求 Neovim 0.11.2 或更高版本。安装脚本会在克隆 starter
+前备份已有的 Neovim 数据。第一次启动 `nvim` 会下载插件，之后请运行
+`:checkhealth`。
 
-第一次启动 `nvim` 时会自动下载 LazyVim 插件，启动后请运行 `:checkhealth`。旧版 `.vimrc` 与 LazyVim 相互独立；其中的 Vundle 插件只有在安装 Vundle 后才会加载。为了获得更好的色彩和 Nerd Font 显示效果，macOS 推荐使用 iTerm2，Windows 推荐使用 Windows Terminal。
+## 安装参考
 
-安装后的编辑器文件位置：
+macOS/Linux 安装脚本会安装 Zsh 依赖和 Oh My Posh，克隆或更新仓库，安装两个
+Zsh 插件，将主题链接到 `~/.config/oh-my-posh/jinli.omp.json`，并询问是否安装
+Meslo Nerd Font。如有需要，它还会把 Oh My Posh 的可执行文件目录加入用户管理
+的 `~/.zshrc`，且确保该 PATH 配置位于加载 `.zshrc.common` 之前。
 
-- LazyVim 配置：`~/.config/nvim`
-- Neovim 数据：`~/.local/share/nvim`
-- Neovim 状态：`~/.local/state/nvim`
-- Neovim 缓存：`~/.cache/nvim`
-- Vim 配置：`~/.vimrc` → 仓库中的 `.vimrc`（仓库存在时创建；原文件会备份为 `~/.vimrc-pre-lazyvim`）
+在 HPC 集群上，如果没有 `sudo` 且只有 Zsh 缺失，脚本可以将 ncurses 和 Zsh
+编译到 `~/.local`（或 `$SHELL_CONFIG_PREFIX`）下。编译器和 `make` 必须已经
+可用，例如通过集群 module 加载。
+
+安装后的主要文件如下：
+
+| 用途 | 位置 |
+| --- | --- |
+| 仓库 | `~/Documents/GitHub/ShellConfig` 或安装时选择的目录 |
+| 共享 Zsh 配置 | 仓库中的 [`.zshrc.common`](./.zshrc.common) |
+| 本地 Zsh 配置 | `~/.zshrc` |
+| Oh My Posh 主题 | `~/.config/oh-my-posh/jinli.omp.json` |
+| 独立 Zsh 插件 | `~/.local/share/zsh/plugins` |
+| LazyVim 配置 | `~/.config/nvim` |
+
+Windows 会直接使用仓库中的主题，只更新 `$PROFILE` 中由 ShellConfig 管理的
+Oh My Posh 区块，不会创建 `~/.config` 下的主题链接。NixOS 模块以声明式方式
+管理共享配置，但不会管理用户自己的 `~/.zshrc`。

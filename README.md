@@ -1,87 +1,41 @@
-Language: 🇺🇸 | [🇨🇳](./README.zh-cn.md)
+Language: English 🇺🇸 | 语言[中文🇨🇳](./README.zh-cn.md)
 
 # ShellConfig
 
-Shared shell and Neovim configuration for macOS, Linux, and Windows.
+> A polished, portable shell environment for macOS, Linux, Windows, and NixOS.
 
-## Shell configuration
+![Jinli Oh My Posh theme demo](./jinli-omp-demo.png)
 
-- Prompt: [Oh My Posh](https://ohmyposh.dev/) with the Koi-fish (锦鲤) [`jinli.omp.json`](./jinli.omp.json) theme
-- Shell: Zsh on macOS/Linux; PowerShell on Windows
-- Zsh plugins: [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) and [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
-- Oh My Zsh is optional. If it is already installed, the installer puts the plugins in its custom plugin directory. Otherwise, it installs the plugins under `~/.local/share/zsh/plugins` and does not install Oh My Zsh.
+ShellConfig brings together a carefully designed [Oh My Posh](https://ohmyposh.dev/)
+prompt, practical Zsh defaults, optional plugins, and a separate LazyVim setup.
+The configuration is shared where it should be shared—and remains local where
+your machine and tools need room to customize it.
 
-The supplied `.zshrc.common` does not require Homebrew, Oh My Zsh, or Neovim. It enables each optional integration only when it is available.
+## Why Jinli?
 
-Zsh completion is case-insensitive. For example, `cat rea` followed by Tab can
-complete to `README.md`.
+The Koi-fish (锦鲤) theme [`jinli.omp.json`](./jinli.omp.json) is designed to make
+useful context visible without turning the prompt into noise:
 
-Zsh also keeps a directory stack: `AUTO_PUSHD` records directories visited by
-`cd`, and `PUSHD_IGNORE_DUPS` avoids repeated entries. Use `cd -<number>` to
-select a numbered previous directory, or inspect the stack with `dirs -v`.
+| Feature | What it shows |
+| --- | --- |
+| **Context-aware path** | Home, locked, GitHub, Git, npm, Downloads, Pictures, and ordinary folders each get a meaningful icon. |
+| **Git at a glance** | Repository name, branch, worktree state, and change counts. |
+| **Language-aware status** | Python and Node versions appear only when relevant to the current project. |
+| **Remote-session awareness** | SSH sessions are marked with a remote icon so local and remote shells are easy to distinguish. |
+| **Responsive segments** | Battery, time, execution duration, and exit status adapt to the environment and stay aligned to the right. |
+| **Cross-platform design** | Zsh on macOS/Linux, PowerShell on Windows, and declarative NixOS support. |
 
-### NixOS
+The screenshot above also shows the theme working alongside the optional system
+information display used in this repository’s broader shell setup.
 
-This repository also exposes a NixOS module through its flake. The module
-installs Zsh, Oh My Posh, the Zsh plugins, and Meslo Nerd Font, and imports the
-shared `.zshrc.common` and `jinli.omp.json` declaratively. It adapts the installer
-paths used by the shared `.zshrc.common` to NixOS package and `/etc` paths.
+## Install
 
-Add the repository as a flake input:
+Choose the setup for your platform. Run installers as your normal user; they
+ask before using `sudo` when a system package is required.
 
-```nix
-inputs.shell-config.url = "github:jin-li/ShellConfig";
-```
+### macOS or Linux
 
-Import the module and enable it in a NixOS configuration:
-
-```nix
-modules = [
-  inputs.shell-config.nixosModules.default
-];
-
-programs.shellConfig.enable = true;
-users.users.<username>.shell = pkgs.zsh;
-```
-
-Then rebuild the selected host:
-
-```bash
-sudo nixos-rebuild switch --flake .#<host>
-exec zsh
-```
-
-The module does not manage the user's `~/.zshrc`; use that file for private,
-machine-specific environment variables, aliases, and tool initialization.
-Configure the terminal emulator to use **MesloLGM Nerd Font** for the theme
-icons.
-
-### Local Zsh configuration
-
-The repository's `.zshrc.common` contains the stable shared configuration. The
-installer creates a regular `~/.zshrc` that sources `.zshrc.common`, then leaves
-the rest of `~/.zshrc` user-managed. This allows tools such as Conda and OpenClaw
-to append their initialization without modifying the shared repository file.
-
-Keep machine-specific settings—private environment variables, workstation-only
-aliases, cluster module setup, and local tool paths—in `~/.zshrc`. Existing
-`~/.zshrc.local` files are sourced for backward compatibility.
-
-For example:
-
-```zsh
-export PATH="$HOME/.local/bin:$PATH"
-alias connect-hpc='ssh user@example.org'
-```
-
-After installation, `~/.zshrc` is a local file that sources the repository's
-`.zshrc.common`.
-
-### macOS and Linux
-
-Supported Linux families include Debian/Ubuntu, Fedora/RHEL, Arch, and openSUSE. On macOS, install [Homebrew](https://brew.sh/) first.
-
-Run the installer as a normal user, not with `sudo`:
+On macOS, install [Homebrew](https://brew.sh/) first. Then run:
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install-oh-my-posh.sh
@@ -89,47 +43,20 @@ chmod +x install-oh-my-posh.sh
 ./install-oh-my-posh.sh
 ```
 
-The installer asks where to clone the repository. Press Enter to accept
-`~/Documents/GitHub/ShellConfig`, or enter another directory. `SHELL_CONFIG_DIR`
-is used as the suggested destination when it is set.
+The installer asks where to clone the repository. Press Enter for
+`~/Documents/GitHub/ShellConfig`, or enter another directory. When it finishes,
+restart the terminal or run `exec zsh`.
 
-The installer:
-
-1. Installs Zsh dependencies and Oh My Posh.
-2. Clones or updates this repository at `~/Documents/GitHub/ShellConfig`.
-3. Installs the Zsh plugins, with or without Oh My Zsh.
-4. Links `jinli.omp.json` to `~/.config/oh-my-posh/jinli.omp.json`.
-5. Moves an existing `~/.zshrc` to `~/.zshrc-pre-oh-my-posh-jinli` (adding a timestamp if necessary), then creates a local `~/.zshrc` that sources this repository's `.zshrc.common`.
-6. Offers to install the Meslo Nerd Font.
-
-After Oh My Posh is installed, the script checks whether its executable directory is available in the current `PATH`. If not, it adds an idempotent `export PATH=...` entry to the user-managed `~/.zshrc`, so future Zsh sessions can find Oh My Posh without changing the shared `.zshrc.common`.
-
-Set `SHELL_CONFIG_DIR` before running the script to use a different checkout directory. Restart the terminal afterward, or run `exec zsh`.
-
-Existing macOS/Linux installations can update the repository, theme link, and
-local configuration with:
+To update an existing installation, run the updater from the repository itself:
 
 ```sh
 cd /path/to/ShellConfig
 ./update.sh
 ```
 
-The update script uses its own directory as the repository location, preserves the local `~/.zshrc`, and keeps legacy
-`~/.zshrc.local` settings available.
-
-On an HPC system, the script asks about `sudo` before installing anything. It first checks for `curl`, `git`, `unzip`, and `zsh`. If `sudo` is unavailable and only `zsh` is missing, it can build ncurses and zsh locally under `~/.local` (or `$SHELL_CONFIG_PREFIX`) without changing system files. The script checks for a compiler and `make`; load those through your cluster's modules first if needed. The final summary reports the resulting `zsh` executable path. Other missing tools must be provided by the cluster or installed by an administrator.
-
-After installation, the relevant files are located at:
-
-- Repository: `~/Documents/GitHub/ShellConfig` (or `$SHELL_CONFIG_DIR`)
-- Common Zsh configuration: repository `.zshrc.common`
-- Local Zsh configuration: `~/.zshrc` (sources `.zshrc.common`)
-- Oh My Posh theme: `~/.config/oh-my-posh/jinli.omp.json` → repository `jinli.omp.json`
-- Standalone Zsh plugins: `~/.local/share/zsh/plugins` (or the Oh My Zsh custom plugin directory when Oh My Zsh exists)
-
 ### Windows PowerShell
 
-Open PowerShell as your normal user and run:
+Open PowerShell as your normal user:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
@@ -137,17 +64,70 @@ Invoke-WebRequest https://raw.githubusercontent.com/jin-li/ShellConfig/main/inst
 .\install-oh-my-posh.ps1
 ```
 
-The PowerShell installer uses WinGet to install Oh My Posh (and Git if needed), skipping tools that are already available. It asks where to clone or update the repository, preserves user and tool configuration in the PowerShell profile, and updates only its managed Oh My Posh section. It checks for Meslo before offering to install it.
+The installer uses WinGet when it needs Oh My Posh or Git, asks for the
+repository location, and preserves existing PowerShell profile content.
 
-After installation, select **MesloLGM Nerd Font** in the terminal profile. For WSL, run the Linux installer inside WSL but install/configure the font on Windows.
+### NixOS
 
-The PowerShell profile is normally stored at `$PROFILE` (for example, `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`). Windows uses the theme directly from `Documents\GitHub\ShellConfig\jinli.omp.json`; no `~\.config` theme link is created. The generated profile adds Oh My Posh's installation directory to `$env:Path` before initializing the theme.
+Add the repository as a flake input, import the module, and enable it:
 
-## Neovim configuration
+```nix
+inputs.shell-config.url = "github:jin-li/ShellConfig";
 
-LazyVim is intentionally a separate installer from Oh My Posh: Oh My Posh configures the shell prompt, while LazyVim replaces the Neovim configuration and downloads editor plugins. Keeping them separate lets you use the prompt without Neovim and avoids changing editor files during shell setup.
+modules = [ inputs.shell-config.nixosModules.default ];
+programs.shellConfig.enable = true;
+users.users.<username>.shell = pkgs.zsh;
+```
 
-The current LazyVim starter requires Neovim 0.11.2 or newer. The installer does not remove Vim or an older Neovim; it stops with an upgrade message if the installed version is too old. It backs up existing Neovim data before cloning the starter:
+Then rebuild and start a fresh Zsh session:
+
+```bash
+sudo nixos-rebuild switch --flake .#<host>
+exec zsh
+```
+
+## Fonts and terminal setup
+
+Install and select **MesloLGM Nerd Font** in your terminal profile. The prompt
+uses Nerd Font glyphs for its icons; without the font, icons may appear as
+boxes. For WSL, run the Linux installer inside WSL but install the font on
+Windows.
+
+## Shell configuration
+
+The shared shell configuration uses Zsh on macOS/Linux and PowerShell on
+Windows. Zsh includes:
+
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
+- [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
+- Case-insensitive completion, including convenient directory completion
+- A directory stack via `AUTO_PUSHD`, `PUSHD_IGNORE_DUPS`, `cd -<number>`, and `dirs -v`
+
+Homebrew, Oh My Zsh, and Neovim are optional. `.zshrc.common` enables optional
+integrations only when the relevant program is available. If Oh My Zsh exists,
+the installer uses its custom plugin directory; otherwise plugins go under
+`~/.local/share/zsh/plugins`.
+
+## Shared and local Zsh configuration
+
+The repository’s [`.zshrc.common`](./.zshrc.common) is the stable, shared
+configuration. The installer creates a regular `~/.zshrc` that sources it.
+Machine-specific settings and tool initialization belong in `~/.zshrc`, so
+Conda, OpenClaw, and similar tools can add their setup without changing the
+shared repository file.
+
+```zsh
+export PATH="$HOME/.local/bin:$PATH"
+alias connect-hpc='ssh user@example.org'
+```
+
+Existing `~/.zshrc.local` files are still sourced for backward compatibility.
+The installer backs up an existing `~/.zshrc` as
+`~/.zshrc-pre-oh-my-posh-jinli` (with a timestamp if needed).
+
+## Neovim setup
+
+LazyVim is intentionally separate from shell installation:
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/jin-li/ShellConfig/main/install_LazyVim.sh
@@ -155,14 +135,35 @@ chmod +x install_LazyVim.sh
 ./install_LazyVim.sh
 ```
 
-On HPC systems, this installer also asks about `sudo` and checks for `git` and `nvim` first. It never attempts a privileged installation without confirmation. If either dependency is missing without `sudo`, load it through the cluster's environment modules or install it in your user space before rerunning.
+The current LazyVim starter requires Neovim 0.11.2 or newer. The installer backs
+up existing Neovim data before cloning the starter. The first `nvim` launch
+downloads plugins; run `:checkhealth` afterward.
 
-The first `nvim` launch downloads the LazyVim plugins. Run `:checkhealth` after startup. The legacy `.vimrc` is independent of LazyVim; its Vundle plugins are optional and are loaded only when Vundle is installed. A modern terminal such as iTerm2 on macOS or Windows Terminal on Windows is recommended for good color and Nerd Font support.
+## Installation reference
 
-After installation, the editor files are located at:
+The macOS/Linux installer installs Zsh dependencies and Oh My Posh, clones or
+updates the repository, installs the two Zsh plugins, links the theme to
+`~/.config/oh-my-posh/jinli.omp.json`, and offers to install Meslo Nerd Font.
+It also adds Oh My Posh’s executable directory to the user-managed `~/.zshrc`
+when necessary, before `.zshrc.common` is loaded.
 
-- LazyVim configuration: `~/.config/nvim`
-- Neovim data: `~/.local/share/nvim`
-- Neovim state: `~/.local/state/nvim`
-- Neovim cache: `~/.cache/nvim`
-- Vim configuration: `~/.vimrc` → repository `.vimrc` (when the repository is present; any previous file is backed up as `~/.vimrc-pre-lazyvim`)
+On HPC systems, it can build ncurses and Zsh under `~/.local` (or
+`$SHELL_CONFIG_PREFIX`) when `sudo` is unavailable and only Zsh is missing.
+The compiler and `make` must already be available, for example through cluster
+modules.
+
+After installation, the main files are:
+
+| Purpose | Location |
+| --- | --- |
+| Repository | `~/Documents/GitHub/ShellConfig` or the directory you selected |
+| Shared Zsh configuration | Repository [`.zshrc.common`](./.zshrc.common) |
+| Local Zsh configuration | `~/.zshrc` |
+| Oh My Posh theme | `~/.config/oh-my-posh/jinli.omp.json` |
+| Standalone Zsh plugins | `~/.local/share/zsh/plugins` |
+| LazyVim configuration | `~/.config/nvim` |
+
+Windows uses the theme directly from the repository and updates only its
+managed Oh My Posh block in `$PROFILE`; it does not create a `~/.config` theme
+link. The NixOS module manages the shared configuration declaratively but does
+not manage the user’s `~/.zshrc`.
