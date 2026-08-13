@@ -214,6 +214,15 @@
           "type": "root"
         },
         {
+          "background": "p:blue",
+          "foreground": "p:segment-text",
+          "invert_powerline": true,
+          "powerline_symbol": "\ue0b2",
+          "style": "powerline",
+          "template": "\uf313 {{ .Type }}",
+          "type": "nix-shell"
+        },
+        {
           "background": "p:yellow",
           "foreground": "p:segment-text",
           "invert_powerline": true,
