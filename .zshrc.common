@@ -18,6 +18,11 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|?=**'
 # Keep a numbered directory history available through `cd -<number>`.
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
+# Change directory with directory path directly, no "cd" needed
+setopt AUTO_CD
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
 
 export POSH_CATPPUCCIN_FLAVOR=macchiato
 if command -v oh-my-posh >/dev/null 2>&1; then
